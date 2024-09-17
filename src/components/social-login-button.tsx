@@ -8,6 +8,7 @@ interface SocialLoginButtonProps {
   label: string;
   icon?: React.ReactNode;
   className?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
@@ -15,6 +16,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
   label,
   icon,
   className,
+  type
 }) => {
   const [isSocialLogin, setIsSocialLogin] = useState(false);
 
@@ -39,6 +41,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
       disabled={isSocialLogin}
       className={`flex items-center justify-center w-full space-x-2 ${className}`}
       variant="outline"
+      type={type}
     >
       {isSocialLogin ? (
         <LoadingDots />

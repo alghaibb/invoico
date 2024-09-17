@@ -187,11 +187,13 @@ const CreateAccountForm: React.FC = () => {
               provider="google"
               label="Sigup with Google"
               icon={<FaGoogle className="w-4 h-4 " />}
+              type="button"
             />
             <SocialLoginButton
               provider="facebook"
               label="Sigup with Facebook"
               icon={<FaFacebook className="w-4 h-4" />}
+              type="button"
             />
           </div>
 

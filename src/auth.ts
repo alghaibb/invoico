@@ -102,6 +102,10 @@ const authConfig: NextAuthConfig = {
     },
   },
   secret: process.env.AUTH_SECRET!,
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  }
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

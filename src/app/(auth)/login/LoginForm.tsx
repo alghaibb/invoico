@@ -24,7 +24,6 @@ import CardWrapper from "@/components/card-wrapper";
 import { Message } from "@/components/ui/custom-message";
 import SocialLoginButton from "@/components/social-login-button";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
-import { link } from "fs";
 import Link from "next/link";
 
 // Define types based on Zod schema
@@ -130,11 +129,13 @@ const LoginForm: React.FC = () => {
               provider="google"
               label="Sign in with Google"
               icon={<FaGoogle className="w-4 h-4 " />}
+              type="button"
             />
             <SocialLoginButton
               provider="facebook"
               label="Sign in with Facebook"
               icon={<FaFacebook className="w-4 h-4" />}
+              type="button"
             />
           </div>
 
