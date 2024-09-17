@@ -1,0 +1,77 @@
+/* Custom CSS for mobile menu and animations */
+
+/* Disable scrolling when menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* Mobile menu container */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%; /* Initially off-screen */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255);
+  z-index: 50;
+  transition: left 0.3s ease-in-out;
+}
+
+/* Slide the menu into view */
+.mobile-menu.open {
+  left: 0;
+}
+
+/* Menu links container */
+.menu-links {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards; /* Fade in the links */
+  animation-delay: 0.3s; /* Delay to sync with the menu sliding in */
+}
+
+/* Each link fades in sequentially */
+.menu-links a {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+  opacity: 0;
+  animation: fadeInLinks 0.3s forwards;
+}
+
+.menu-links a:nth-child(1) {
+  animation-delay: 0.4s;
+}
+
+.menu-links a:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.menu-links a:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+/* Fade-in animation for links */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInLinks {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

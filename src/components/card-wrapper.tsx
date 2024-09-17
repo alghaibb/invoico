@@ -20,7 +20,7 @@ const CardWrapper = ({
   backButtonLabel,
 }: CardWrapperProps) => {
   return (
-    <Card className="w-full px-4 py-4 shadow-md xl:w-1/4 md:w-1/2 md:px-0 md:py-0">
+    <Card className="w-full shadow-md xl:w-1/4 md:w-1/2 px-4 py-4 md:px-0 md:py-0">
       <CardHeader className="pt-6 text-center sm:pt-8 md:pt-10 lg:pt-12">
         <FormHeader label={label} title={title} />
       </CardHeader>

@@ -11,20 +11,28 @@ import {
 
 interface NavbarButtonsProps {
   isAuthenticated: boolean; // True if user is logged in
+  className?: string; // For custom class to allow full-width on mobile
 }
 
-const NavbarButtons: React.FC<NavbarButtonsProps> = ({ isAuthenticated }) => {
+const NavbarButtons: React.FC<NavbarButtonsProps> = ({
+  isAuthenticated,
+  className,
+}) => {
   return (
-    <div className="flex space-x-4 items-center justify-center">
+    <div className={`flex space-x-4 items-center justify-center ${className}`}>
       {isAuthenticated ? (
         <>
-          <Link href="/account">
-            <Button>Account</Button>
+          <Link href="/account" className="w-full">
+            {" "}
+            {/* Make full-width */}
+            <Button className="w-full">Account</Button>
           </Link>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span>
+                <span className="w-full">
+                  {" "}
+                  {/* Make full-width */}
                   <LogoutButton>
                     <LogOutIcon />
                   </LogoutButton>
@@ -38,11 +46,17 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({ isAuthenticated }) => {
         </>
       ) : (
         <>
-          <Link href="/login">
-            <Button variant="outline">Login</Button>
+          <Link href="/login" className="w-full">
+            {" "}
+            {/* Make full-width */}
+            <Button variant="outline" className="w-full">
+              Login
+            </Button>
           </Link>
-          <Link href="/create-account">
-            <Button>Create Account</Button>
+          <Link href="/create-account" className="w-full">
+            {" "}
+            {/* Make full-width */}
+            <Button className="w-full">Create Account</Button>
           </Link>
         </>
       )}

@@ -28,7 +28,8 @@ const ContactUsForm: React.FC = () => {
   const { execute, result, isExecuting } = useAction(createContactMessage);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [sessionEmail, setSessionEmail] = useState<string | null>(null); // State to store session email
+  const [sessionEmail, setSessionEmail] = useState<string | null>(null);
+  const [sessionName, setSessionName] = useState<string | null>(null);
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(ContactFormSchema),
@@ -46,9 +47,13 @@ const ContactUsForm: React.FC = () => {
       try {
         const res = await fetch("/api/get-session");
         const data = await res.json();
-        if (data.user?.email) {
+
+        if (data.user) {
+          const fullName = `${data.user.firstName} ${data.user.lastName}`;
           setSessionEmail(data.user.email);
+          setSessionName(fullName);
           form.setValue("email", data.user.email);
+          form.setValue("name", fullName);
         }
       } catch (error) {
         console.error("Error fetching session:", error);
@@ -67,7 +72,7 @@ const ContactUsForm: React.FC = () => {
     if (result?.data?.success) {
       setSuccess(result.data.success);
       form.reset({
-        name: "",
+        name: sessionName || "",
         email: sessionEmail || "",
         subject: "",
         message: "",
@@ -75,7 +80,7 @@ const ContactUsForm: React.FC = () => {
     } else if (result?.data?.error) {
       setError(result.data.error);
     }
-  }, [result, form, sessionEmail]);
+  }, [result, form, sessionEmail, sessionName]);
 
   return (
     <CardWrapper
@@ -95,7 +100,7 @@ const ContactUsForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} disabled={isExecuting} />
+                  <Input {...field} disabled={!!sessionName || isExecuting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
