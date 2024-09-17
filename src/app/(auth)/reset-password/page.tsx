@@ -1,13 +1,20 @@
-import ResetPasswordForm from "./ResetPasswordForm";
+import { Metadata } from "next";
+import ResetPasswordPage from "./ResetPasswordPage";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingDots } from "@/components/ui/loading";
 
-const ResetPasswordPage = () => {
-  return (
-    <Suspense fallback={<Skeleton className="w-full h-full" />}>
-      <ResetPasswordForm />
-    </Suspense>
-  );
+export const metadata: Metadata = {
+  title: "Reset Password",
 };
 
-export default ResetPasswordPage;
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <LoadingDots className="h-full flex items-center justify-center" />
+      }
+    >
+      <ResetPasswordPage />
+    </Suspense>
+  );
+}

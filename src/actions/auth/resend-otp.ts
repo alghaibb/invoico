@@ -21,8 +21,7 @@ export const resendOtp = actionClient
       await rateLimitByIp(email, "resend-otp", {
         key: "resend-otp",
         limit: 1,
-        // Do it every minute
-        window: 60000,
+        window: 60 * 1000, // 1 minute
       });
     } catch (error) {
       return {

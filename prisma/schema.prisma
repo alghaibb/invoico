@@ -30,6 +30,7 @@ model User {
   session            Session[]
   verificationOTP    VerificationOTP[]
   passwordResetToken PasswordResetToken[]
+  Contact            Contact[]
 
   @@map("users")
 }
@@ -94,4 +95,19 @@ model PasswordResetToken {
 
   @@index([token]) // Index for faster token lookups
   @@map("password_reset_tokens")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  userId    String? 
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade) 
+
+  @@index([userId])
+  @@map("contacts")
 }

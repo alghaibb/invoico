@@ -9,7 +9,6 @@ import { Adapter } from "next-auth/adapters";
 import { encode as defaultEncode } from "next-auth/jwt";
 import { v4 as uuid } from "uuid";
 import { getUserByEmail } from "./utils/getUser";
-import bcrypt from "bcrypt";
 
 const adapter = PrismaAdapter(prisma) as Adapter;
 
@@ -28,28 +27,19 @@ const authConfig: NextAuthConfig = {
     }),
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: {},
+        password: {},
       },
       async authorize(credentials) {
         const { email, password } = credentials;
 
         // Fetch the user by email
-        const user = await getUserByEmail(email as string);
-
-        // If user doesn't exist or the password doesn't match, return null
-        if (!user) {
-          throw new Error("User not found");
+        const res = await getUserByEmail(email as string, password as string);
+        if (res) {
+          return res as User;
         }
 
-        // Compare the password using bcrypt (ensure password in DB is hashed)
-        const isValid = bcrypt.compare(password as string, user.password as string);
-
-        if (!isValid) {
-          throw new Error("Invalid credentials");
-        }
-
-        return user as User; // Return the user if everything is fine
+        return null
       },
     }),
   ],
@@ -81,58 +71,37 @@ const authConfig: NextAuthConfig = {
       return true;
     },
     async jwt({ token, user, account }) {
-      // Handle OAuth and credentials logins separately
-      if (account) {
-        if (account.provider === "credentials") {
-          token.credentials = true;
-        } else {
-          // For OAuth logins, set the user ID
-          token.sub = user?.id;
-        }
+      if (account?.provider === "credentials") {
+        token.credentials = true
       }
-      return token;
-    },
-    async session({ session, token }) {
-      // Attach the user ID from the token to the session object
-      if (token.sub) {
-        session.user.id = token.sub;
-      }
-      return session;
+      return token
     },
   },
   jwt: {
     encode: async function (params) {
-      // Handle OAuth and credentials logins consistently
-      if (params.token?.credentials || params.token?.sub) {
-        const sessionToken = uuid();
+      if (params.token?.credentials) {
+        const sessionToken = uuid()
 
         if (!params.token.sub) {
-          throw new Error("No user ID found in token");
+          throw new Error("No user ID found in token")
         }
 
-        // Create session in the database for both OAuth and credentials logins
         const createdSession = await adapter?.createSession?.({
           sessionToken: sessionToken,
           userId: params.token.sub,
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-        });
+        })
 
         if (!createdSession) {
-          throw new Error("Failed to create session");
+          throw new Error("Failed to create session")
         }
 
-        return sessionToken;
+        return sessionToken
       }
-      return defaultEncode(params);
+      return defaultEncode(params)
     },
   },
   secret: process.env.AUTH_SECRET!,
-  pages: {
-    signIn: "/login",
-    signOut: "/login",
-    error: "/login",
-    verifyRequest: "/verify-email",
-  },
-}
+};
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

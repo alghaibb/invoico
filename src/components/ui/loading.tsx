@@ -1,6 +1,11 @@
 import React from "react";
+import clsx from "clsx";
 
-export const LoadingDots: React.FC = () => {
+interface LoadingDotsProps {
+  className?: string;
+}
+
+export const LoadingDots: React.FC<LoadingDotsProps> = ({ className }) => {
   return (
     <>
       <style>
@@ -13,7 +18,10 @@ export const LoadingDots: React.FC = () => {
           }
         `}
       </style>
-      <div style={bouncingLoaderStyle}>
+      <div
+        className={clsx("bouncing-loader", className)}
+        style={bouncingLoaderStyle}
+      >
         <div style={{ ...dotStyle, animationDelay: "0ms" }}></div>
         <div style={{ ...dotStyle, animationDelay: "200ms" }}></div>
         <div style={{ ...dotStyle, animationDelay: "400ms" }}></div>
