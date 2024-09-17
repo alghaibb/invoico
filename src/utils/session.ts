@@ -4,7 +4,11 @@ import { cookies } from "next/headers";
 // Function to get session from Prisma using the session token
 export async function getSession() {
   const cookieStore = cookies();
-  const sessionToken = cookieStore.get("authjs.session-token");
+  const sessionToken = cookieStore.get(
+    process.env.NODE_ENV === "production"
+      ? "__Secure-next-auth.session-token"
+      : "next-auth.session-token"
+  );
 
   if (!sessionToken) return null;
 
