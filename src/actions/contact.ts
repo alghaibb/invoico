@@ -1,27 +1,28 @@
-"use server"
+"use server";
 
-import prisma from "@/lib/prisma"
-import { rateLimitByIp } from "@/lib/limiter"
-import { actionClient } from "@/lib/safe-action"
-import { ContactFormSchema } from "@/schemas"
-import { flattenValidationErrors } from "next-safe-action"
-import { auth } from "@/auth"
+import prisma from "@/lib/prisma";
+import { rateLimitByIp } from "@/lib/limiter";
+import { actionClient } from "@/lib/safe-action";
+import { ContactFormSchema } from "@/schemas";
+import { flattenValidationErrors } from "next-safe-action";
+import { getSession } from "@/utils/session"; 
 
-export const creatContactMessage = actionClient
+export const createContactMessage = actionClient
   .schema(ContactFormSchema, {
     handleValidationErrorsShape: (ve) => flattenValidationErrors(ve),
   })
   .action(async ({ parsedInput: { name, email, subject, message } }) => {
-    // Get user session
-    const session = await auth();
+    // Get user session from the server
+    const session = await getSession(); // Fetch session using the utility or NextAuth
 
-    // Get user ID or null if not authenticated
+    // If the user is logged in, use their email from the session
     const userId = session?.user?.id || null;
+    const userEmail = session?.user?.email || email; // Use session email if available, otherwise use form input
 
-    // Apply rate limiting by IP, limiting to 5 requests in a 10-minute window 
+    // Apply rate limiting by IP, limiting to 5 requests in a 10-minute window
     try {
-      await rateLimitByIp(email, "create-contact-message", {
-        key: `create-contact-message=${email}`,
+      await rateLimitByIp(userEmail, "create-contact-message", {
+        key: `create-contact-message=${userEmail}`,
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window
       });
@@ -31,20 +32,24 @@ export const creatContactMessage = actionClient
       };
     }
 
-    // Check if authenticated user's email matches provided email
-    if (session && email !== session.user.email) {
-      return { error: "Authenticated user's email doesn't match provided email." };
+    // Check if authenticated user's email matches the provided email (only if user is authenticated)
+    if (session && email !== userEmail) {
+      return { error: "Authenticated user's email doesn't match the provided email." };
     }
 
+    // Create the contact message in the database
     const contactMessage = await prisma.contact.create({
       data: {
         name,
-        email,
+        email: userEmail, // Use session email or provided email
         subject,
         message,
         userId,
-      }
+      },
     });
 
-    return { success: "Your message was sent successfully, we will get back to you as soon as possible.", contactMessage };
+    return {
+      success: "Your message was sent successfully, we will get back to you as soon as possible.",
+      contactMessage,
+    };
   });
