@@ -124,23 +124,22 @@ model Contact {
 }
 
 model Invoice {
-  id             String        @id @default(cuid())
-  userId         String?
-  guestId        String?
-  clientId       String
-  fromName       String?
-  fromEmail      String?
-  fromAddress    String?
+  id              String        @id @default(cuid())
+  userId          String?
+  guestId         String?
+  clientId        String
+  fromName        String?
+  fromEmail       String?
+  fromAddress     String?
   fromPhoneNumber String?
-  invoiceNumber  String        @unique
-  invoiceTitle   String
-  invoiceDate    DateTime      @default(now())
-  dueDate        DateTime
-  dueDateOptions String
-  status         InvoiceStatus @default(PENDING)
-  totalAmount    Float
-  taxAmount      Float?
-  items          InvoiceItem[]
+  invoiceNumber   String        @unique
+  invoiceTitle    String
+  invoiceDate     DateTime      @default(now())
+  dueDate         DateTime
+  status          InvoiceStatus @default(PENDING)
+  totalAmount     Float
+  taxAmount       Float?
+  items           InvoiceItem[]
 
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
   client Client @relation(fields: [clientId], references: [id])

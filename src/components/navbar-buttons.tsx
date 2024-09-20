@@ -22,17 +22,13 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
     <div className={`flex space-x-4 items-center justify-center ${className}`}>
       {isAuthenticated ? (
         <>
-          <Link href="/account" className="w-full">
-            {" "}
-            {/* Make full-width */}
-            <Button className="w-full">Account</Button>
+          <Link href="/account">
+            <Button>Account</Button>
           </Link>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="w-full">
-                  {" "}
-                  {/* Make full-width */}
+                <span>
                   <LogoutButton>
                     <LogOutIcon />
                   </LogoutButton>
@@ -46,20 +42,17 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
         </>
       ) : (
         <>
-          <Link href="/login" className="w-full">
-            {" "}
-            {/* Make full-width */}
-            <Button variant="outline" className="w-full">
-              Login
-            </Button>
+          <Link href="/login">
+            <Button variant="outline">Login</Button>
           </Link>
-          <Link href="/create-account" className="w-full">
-            {" "}
-            {/* Make full-width */}
-            <Button className="w-full">Create Account</Button>
+          <Link href="/create-account">
+            <Button>Create Account</Button>
           </Link>
         </>
       )}
+      <Link href="/invoice/new-invoice">
+        <Button>Create Invoice</Button>
+      </Link>
     </div>
   );
 };

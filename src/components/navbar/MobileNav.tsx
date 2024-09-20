@@ -79,6 +79,9 @@ const MobileNav = () => {
               </Link>
             </div>
           )}
+          <Link href="/invoice/new-invoice" className="w-full">
+            <Button className="w-full">Create Invoice</Button>
+          </Link>
         </div>
       </div>
     </>
