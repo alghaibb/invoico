@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { getUserByEmail } from "@/utils/getUser";
+import { getUserByEmail } from "@/utils/user/getUser";
 import { actionClient } from "@/lib/safe-action";
 import { LoginSchema } from "@/validations/auth";
 import { flattenValidationErrors } from "next-safe-action";

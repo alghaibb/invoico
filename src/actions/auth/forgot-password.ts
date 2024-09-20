@@ -1,6 +1,6 @@
 "use server"
 
-import { getUserByEmail } from "@/utils/getUser";
+import { getUserByEmail } from "@/utils/user/getUser";
 import { generateResetPasswordToken } from "@/utils/token";
 import { actionClient } from "@/lib/safe-action";
 import { ForgotPasswordSchema } from "@/validations/auth";

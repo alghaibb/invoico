@@ -1,6 +1,6 @@
 "use server"
 
-import { getUserByEmail } from "@/utils/getUser"
+import { getUserByEmail } from "@/utils/user/getUser"
 import { generateVerificationCode } from "@/utils/token"
 import { actionClient } from "@/lib/safe-action"
 import { flattenValidationErrors } from "next-safe-action"

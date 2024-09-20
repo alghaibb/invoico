@@ -194,7 +194,7 @@ model UserMonthlyUsage {
   @@map("user_monthly_usages")
 }
 
-model GuestMonthlyUsage {
+model GuestUsage {
   id        String   @id @default(cuid())
   ipAddress String
   month     DateTime
@@ -203,7 +203,8 @@ model GuestMonthlyUsage {
   updatedAt DateTime @updatedAt
 
   @@index([ipAddress])
-  @@map("guest_monthly_usages")
+  @@unique([ipAddress, month])
+  @@map("guest_usages")
 }
 
 model Plan {

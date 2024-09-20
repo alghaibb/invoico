@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { getUserByResetPasswordToken } from "@/utils/getUser";
+import { getUserByResetPasswordToken } from "@/utils/user/getUser";
 import { deleteResetPasswordToken } from "@/utils/token";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";

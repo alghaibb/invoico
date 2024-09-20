@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { getUserByEmail } from "@/utils/getUser";
+import { getUserByEmail } from "@/utils/user/getUser";
 import { CreateAccountSchema } from "@/validations/auth";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";

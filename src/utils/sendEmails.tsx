@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { VerifyEmail, ForgotPassword } from "@/components/emails";
 import { Resend } from "resend";
-import { getUserById } from "./getUser";
+import { getUserById } from "./user/getUser";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

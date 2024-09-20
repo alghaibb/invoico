@@ -8,7 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 import { encode as defaultEncode } from "next-auth/jwt";
 import { v4 as uuid } from "uuid";
-import { getUserByEmail } from "./utils/getUser";
+import { getUserByEmail } from "./utils/user/getUser";
 
 const adapter = PrismaAdapter(prisma) as Adapter;
 
