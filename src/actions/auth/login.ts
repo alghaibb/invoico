@@ -3,7 +3,7 @@
 import bcrypt from "bcrypt";
 import { getUserByEmail } from "@/utils/getUser";
 import { actionClient } from "@/lib/safe-action";
-import { LoginSchema } from "@/schemas/auth";
+import { LoginSchema } from "@/validations/auth";
 import { flattenValidationErrors } from "next-safe-action";
 import { signIn } from "@/auth";
 import { rateLimitByIp } from "@/lib/limiter";

@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { getUserByEmail } from "@/utils/getUser";
-import { CreateAccountSchema } from "@/schemas/auth";
+import { CreateAccountSchema } from "@/validations/auth";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
 import { rateLimitByIp } from "@/lib/limiter";

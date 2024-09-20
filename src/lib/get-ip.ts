@@ -1,9 +1,11 @@
 import { headers } from "next/headers";
 
 export function getIp() {
-  const forwardedFor = headers().get("x-forwarded-for");
-  const realIp = headers().get("x-real-ip");
+  const headersList = headers(); // Get headers without any arguments
+  const forwardedFor = headersList.get("x-forwarded-for");
+  const realIp = headersList.get("x-real-ip");
 
+  // Check for forwarded IP first, fall back to real IP
   if (forwardedFor) {
     return forwardedFor.split(",")[0].trim();
   }
@@ -12,5 +14,6 @@ export function getIp() {
     return realIp.trim();
   }
 
+  // Default return if neither header is present
   return null;
 }

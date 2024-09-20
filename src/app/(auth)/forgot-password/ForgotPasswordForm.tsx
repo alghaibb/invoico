@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/actions/auth/forgot-password";
 import { useAction } from "next-safe-action/hooks";
-import { ForgotPasswordSchema } from "@/schemas/auth";
+import { ForgotPasswordSchema } from "@/validations/auth";
 import { LoadingDots } from "@/components/ui/loading";
 import { Message } from "@/components/ui/custom-message";
 import CardWrapper from "@/components/card-wrapper";

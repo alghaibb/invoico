@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { verifyEmail } from "@/actions/auth/verify-email";
 import { useAction } from "next-safe-action/hooks";
-import { VerifyEmailSchema } from "@/schemas/auth";
+import { VerifyEmailSchema } from "@/validations/auth";
 import { LoadingDots } from "@/components/ui/loading";
 import { useRouter } from "next/navigation";
 import CardWrapper from "@/components/card-wrapper";

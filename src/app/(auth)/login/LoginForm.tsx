@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/actions/auth/login";
 import { useAction } from "next-safe-action/hooks";
-import { LoginSchema } from "@/schemas/auth";
+import { LoginSchema } from "@/validations/auth";
 import { Eye, EyeOff } from "lucide-react";
 import { LoadingDots } from "@/components/ui/loading";
 import { useRouter } from "next/navigation";
@@ -53,7 +53,7 @@ const LoginForm: React.FC = () => {
   // Redirect on successful login
   useEffect(() => {
     if (result?.data?.success) {
-      router.push("/invoices"); // Redirect to your dashboard page or another protected route
+      router.push("/invoice"); // Redirect to your dashboard page or another protected route
     } else if (result?.data?.error) {
       setError(result.data.error); // Set error message if there's any
     }

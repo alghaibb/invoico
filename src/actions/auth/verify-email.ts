@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { VerifyEmailSchema } from "@/schemas/auth";
+import { VerifyEmailSchema } from "@/validations/auth";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
 import { verifyVerificationCode, deleteVerificationCode } from "@/utils/token";

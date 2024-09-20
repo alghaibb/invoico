@@ -3,7 +3,7 @@
 import { getUserByEmail } from "@/utils/getUser";
 import { generateResetPasswordToken } from "@/utils/token";
 import { actionClient } from "@/lib/safe-action";
-import { ForgotPasswordSchema } from "@/schemas/auth";
+import { ForgotPasswordSchema } from "@/validations/auth";
 import { flattenValidationErrors } from "next-safe-action";
 import { sendForgotPasswordEmail } from "@/utils/sendEmails";
 import { rateLimitByIp } from "@/lib/limiter";

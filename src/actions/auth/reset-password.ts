@@ -6,7 +6,7 @@ import { getUserByResetPasswordToken } from "@/utils/getUser";
 import { deleteResetPasswordToken } from "@/utils/token";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
-import { ResetPasswordSchema } from "@/schemas/auth";
+import { ResetPasswordSchema } from "@/validations/auth";
 
 export const resetPassword = actionClient
   .schema(ResetPasswordSchema, {

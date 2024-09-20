@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createAccount } from "@/actions/auth/create-account";
 import { useAction } from "next-safe-action/hooks";
-import { CreateAccountSchema } from "@/schemas/auth";
+import { CreateAccountSchema } from "@/validations/auth";
 import { Eye, EyeOff } from "lucide-react";
 import { LoadingDots } from "@/components/ui/loading";
 import { useRouter } from "next/navigation";

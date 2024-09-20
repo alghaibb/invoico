@@ -3,9 +3,9 @@
 import prisma from "@/lib/prisma";
 import { rateLimitByIp } from "@/lib/limiter";
 import { actionClient } from "@/lib/safe-action";
-import { ContactFormSchema } from "@/schemas";
+import { ContactFormSchema } from "@/validations";
 import { flattenValidationErrors } from "next-safe-action";
-import { getSession } from "@/utils/session"; 
+import { getSession } from "@/utils/session";
 
 export const createContactMessage = actionClient
   .schema(ContactFormSchema, {

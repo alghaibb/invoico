@@ -4,7 +4,7 @@ import { getUserByEmail } from "@/utils/getUser"
 import { generateVerificationCode } from "@/utils/token"
 import { actionClient } from "@/lib/safe-action"
 import { flattenValidationErrors } from "next-safe-action"
-import { ResendVerificationEmailSchema } from "@/schemas/auth"
+import { ResendVerificationEmailSchema } from "@/validations/auth"
 import { sendVerificationEmail } from "@/utils/sendEmails"
 import { rateLimitByIp } from "@/lib/limiter"
 

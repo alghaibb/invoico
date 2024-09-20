@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { resetPassword } from "@/actions/auth/reset-password"; // Import your resetPassword action
+import { resetPassword } from "@/actions/auth/reset-password"; 
 import { useAction } from "next-safe-action/hooks";
-import { ResetPasswordSchema } from "@/schemas/auth";
+import { ResetPasswordSchema } from "@/validations/auth";
 import { Eye, EyeOff } from "lucide-react";
 import { LoadingDots } from "@/components/ui/loading";
-import { useRouter, useSearchParams } from "next/navigation"; // Import `useSearchParams`
+import { useRouter, useSearchParams } from "next/navigation"; 
 import { Message } from "@/components/ui/custom-message";
 import CardWrapper from "@/components/card-wrapper";
 
@@ -43,7 +43,7 @@ const ResetPasswordForm: React.FC = () => {
     defaultValues: {
       password: "",
       confirmPassword: "",
-      token: token || "", 
+      token: token || "",
     },
   });
 

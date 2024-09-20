@@ -6,3 +6,5 @@ export const ContactFormSchema = z.object({
   subject: z.string().min(1, { message: "Subject is required" }),
   message: z.string().min(1, { message: "Message is required" }),
 });
+
+
