@@ -50,9 +50,6 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
           </Link>
         </>
       )}
-      <Link href="/invoices/new-invoice">
-        <Button>Create Invoice</Button>
-      </Link>
     </div>
   );
 };
