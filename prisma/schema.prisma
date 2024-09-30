@@ -40,6 +40,7 @@ model User {
   UserMonthlyUsage   UserMonthlyUsage?
   Plan               Plan?                @relation(fields: [planId], references: [id])
   planId             String?
+  Invoice            Invoice[]
 
   @@map("users")
 }
@@ -133,14 +134,14 @@ model UserMonthlyUsage {
 }
 
 model GuestUsage {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   ipAddress String
-  month     DateTime
-  invoices  Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  invoices  Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Invoice   Invoice[]
 
-  @@unique([ipAddress, month])
+  @@unique([ipAddress])
   @@index([ipAddress])
   @@map("guest_usages")
 }
@@ -155,4 +156,53 @@ model Plan {
   users User[]
 
   @@map("plans")
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  invoiceNo       String        @unique
+  fromName        String
+  fromEmail       String
+  fromAddress     String
+  fromPhoneNumber String
+  abn             String?
+  toName          String
+  toEmail         String
+  toAddress       String
+  toPhoneNumber   String?
+  toMobile        String?
+  toFax           String?
+  issueDate       DateTime
+  dueDate         DateTime
+  status          InvoiceStatus @default(PENDING)
+  totalAmmount    Float
+  taxAmmount      Float?
+
+  userId  String?
+  guestId String?
+  user    User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guest   GuestUsage? @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  InvoiceItem InvoiceItem[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String @id @default(cuid())
+  description String
+  quantity    Int
+  price       Float
+  total       Float
+
+  invoideId String
+  invoice   Invoice @relation(fields: [invoideId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoice_items")
 }
