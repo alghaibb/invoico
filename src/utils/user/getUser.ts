@@ -14,6 +14,14 @@ export const getUserById = async (id: string) => {
   });
 };
 
+// Find user by id and plan
+export const getUserByIdWithPlan = async (id: string) => {
+  return await prisma.user.findUnique({
+    where: { id },
+    include: { Plan: true },
+  });
+};
+
 // Find user by verification OTP
 export const getUserByVerificationOTP = async (otp: string) => {
   const verificationOTP = await prisma.verificationOTP.findFirst({

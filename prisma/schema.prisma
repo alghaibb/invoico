@@ -135,13 +135,12 @@ model UserMonthlyUsage {
 
 model GuestUsage {
   id        String    @id @default(cuid())
-  ipAddress String
+  ipAddress String    @unique
   invoices  Int       @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Invoice   Invoice[]
 
-  @@unique([ipAddress])
   @@index([ipAddress])
   @@map("guest_usages")
 }
@@ -161,10 +160,11 @@ model Plan {
 model Invoice {
   id              String        @id @default(cuid())
   invoiceNo       String        @unique
+  invoiceTitle    String
   fromName        String
   fromEmail       String
   fromAddress     String
-  fromPhoneNumber String
+  fromPhoneNumber String?
   abn             String?
   toName          String
   toEmail         String
@@ -175,8 +175,8 @@ model Invoice {
   issueDate       DateTime
   dueDate         DateTime
   status          InvoiceStatus @default(PENDING)
-  totalAmmount    Float
-  taxAmmount      Float?
+  totalAmount     Float
+  taxAmount       Float?
 
   userId  String?
   guestId String?
@@ -198,8 +198,8 @@ model InvoiceItem {
   price       Float
   total       Float
 
-  invoideId String
-  invoice   Invoice @relation(fields: [invoideId], references: [id], onDelete: Cascade)
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
