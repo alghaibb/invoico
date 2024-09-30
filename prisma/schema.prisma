@@ -37,8 +37,6 @@ model User {
   verificationOTP    VerificationOTP[]
   passwordResetToken PasswordResetToken[]
   Contact            Contact[]
-  invoices           Invoice[]
-  clients            Client[]
   UserMonthlyUsage   UserMonthlyUsage?
   Plan               Plan?                @relation(fields: [planId], references: [id])
   planId             String?
@@ -123,66 +121,6 @@ model Contact {
   @@map("contacts")
 }
 
-model Invoice {
-  id              String        @id @default(cuid())
-  userId          String?
-  guestId         String?
-  clientId        String
-  fromName        String?
-  fromEmail       String?
-  fromAddress     String?
-  fromPhoneNumber String?
-  invoiceNumber   String        @unique
-  invoiceTitle    String
-  invoiceDate     DateTime      @default(now())
-  dueDate         DateTime
-  status          InvoiceStatus @default(PENDING)
-  totalAmount     Float
-  taxAmount       Float?
-  items           InvoiceItem[]
-
-  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  client Client @relation(fields: [clientId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("invoices")
-}
-
-model InvoiceItem {
-  id          String @id @default(cuid())
-  invoiceId   String
-  description String
-  quantity    Int
-  unitPrice   Float
-  totalPrice  Float
-
-  invoices Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-
-  @@map("invoice_items")
-}
-
-model Client {
-  id      String  @id @default(cuid())
-  userId  String?
-  name    String
-  email   String  @unique
-  address String?
-  phone   String?
-  mobile  String?
-  fax     String?
-
-  invoices Invoice[]
-
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("clients")
-}
-
 model UserMonthlyUsage {
   id       String   @id @default(cuid())
   userId   String   @unique
@@ -202,8 +140,8 @@ model GuestUsage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ipAddress])
   @@unique([ipAddress, month])
+  @@index([ipAddress])
   @@map("guest_usages")
 }
 
