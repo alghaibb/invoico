@@ -25,7 +25,9 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <body
+          className={`${inter.className} min-h-screen flex flex-col relative`}
+        >
           <main className="flex-grow">
             <Navbar />
             {children}

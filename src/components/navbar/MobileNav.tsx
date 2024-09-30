@@ -42,7 +42,7 @@ const MobileNav = () => {
       </button>
 
       <div className={`${styles["mobile-menu"]} ${isOpen ? styles.open : ""}`}>
-        <button onClick={toggleMenu} className="absolute top-8 right-5 z-50">
+        <button onClick={toggleMenu} className="absolute z-50 top-8 right-5">
           <X className="w-7 h-7" />
         </button>
 
@@ -59,7 +59,7 @@ const MobileNav = () => {
               <Button className="w-full">Logout</Button>
             </LogoutButton>
           ) : (
-            <div className="flex flex-col space-y-1 w-full" onClick={closeMenu}>
+            <div className="flex flex-col w-full space-y-1" onClick={closeMenu}>
               <Link href="/login">
                 <Button variant="outline" className="w-full">
                   Login
