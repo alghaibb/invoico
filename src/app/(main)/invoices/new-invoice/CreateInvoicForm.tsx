@@ -28,8 +28,8 @@ import {
 } from "@/components/ui/table";
 import { LoadingDots } from "@/components/ui/loading";
 import { useToast } from "@/hooks/use-toast";
-import { FaTrash, FaX, FaCheck } from "react-icons/fa6";
 import ConfirmDeleteDialog from "@/components/ui/confirm-delete-dialog";
+import InvoicePreviewModal from "@/components/invoice-preview-modal";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
@@ -37,8 +37,9 @@ type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
 const CreateInvoiceForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const [invoiceNo, setInvoiceNo] = useState("");
-  const [taxRate, setTaxRate] = useState<number>(10); // Default tax rate
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const { toast } = useToast();
 
   // Initialize the form with `react-hook-form` and Zod schema resolver
@@ -61,12 +62,13 @@ const CreateInvoiceForm: React.FC = () => {
       issueDate: new Date(),
       dueDate: new Date(),
       totalAmount: 0,
-      taxAmount: undefined,
+      taxAmount: 0,
+      taxRate: 10,
       items: [{ description: "", quantity: 1, price: 0, total: 0 }],
     },
   });
 
-  const { control, setValue, watch } = form;
+  const { control, setValue } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -75,12 +77,12 @@ const CreateInvoiceForm: React.FC = () => {
 
   // Watch items and taxRate to trigger recalculation
   const items = useWatch({ control, name: "items" });
+  const taxRate = useWatch({ control, name: "taxRate" });
 
   useEffect(() => {
     // Calculate total for each item and overall total with tax
     items.forEach((item, index) => {
       const total = (item.price || 0) * (item.quantity || 0);
-      // Only update total if it's different to prevent re-renders
       if (form.getValues(`items.${index}.total`) !== total) {
         setValue(`items.${index}.total`, total);
       }
@@ -93,13 +95,8 @@ const CreateInvoiceForm: React.FC = () => {
     const taxAmount = (totalWithoutTax * (taxRate ?? 0)) / 100;
     const totalAmount = totalWithoutTax + taxAmount;
 
-    // Only update totalAmount and taxAmount if they have changed
-    if (form.getValues("totalAmount") !== totalAmount) {
-      setValue("totalAmount", totalAmount);
-    }
-    if (form.getValues("taxAmount") !== taxAmount) {
-      setValue("taxAmount", taxAmount);
-    }
+    setValue("taxAmount", taxAmount);
+    setValue("totalAmount", totalAmount);
   }, [items, taxRate, setValue, form]);
 
   // Get invoice number
@@ -153,6 +150,19 @@ const CreateInvoiceForm: React.FC = () => {
 
   return (
     <Form {...form}>
+      <Button
+        variant="outline"
+        type="button"
+        onClick={() => setPreviewModalOpen(true)}
+      >
+        Preview Invoice
+      </Button>
+      <InvoicePreviewModal
+        isOpen={previewModalOpen}
+        onClose={() => setPreviewModalOpen(false)}
+        invoiceData={form.getValues()}
+      />
+      <Separator className="my-6" />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10">
         {/* Invoice Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -527,7 +537,9 @@ const CreateInvoiceForm: React.FC = () => {
                 <Input
                   type="number"
                   value={taxRate}
-                  onChange={(e) => setTaxRate(parseFloat(e.target.value))}
+                  onChange={(e) =>
+                    setValue("taxRate", parseFloat(e.target.value))
+                  }
                   className="pr-8"
                 />
                 <span className="absolute right-[33rem] top-1/2 transform -translate-y-1/2 text-muted-foreground text-sm">

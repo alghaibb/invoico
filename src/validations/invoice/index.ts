@@ -30,6 +30,7 @@ export const InvoiceCreateSchema = z.object({
 
   status: z.enum(["PENDING", "PAID", "OVERDUE"]).default("PENDING"),
   totalAmount: z.number().min(0, "Total amount must be a positive number"),
+  taxRate: z.number().min(0).max(100).optional(),
   taxAmount: z.number().optional(),
 
   // Array of invoice items
