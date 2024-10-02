@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/table";
 import { LoadingDots } from "@/components/ui/loading";
 import { useToast } from "@/hooks/use-toast";
+import { FaTrash, FaX, FaCheck } from "react-icons/fa6";
+import ConfirmDeleteDialog from "@/components/ui/confirm-delete-dialog";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
@@ -187,9 +189,8 @@ const CreateInvoiceForm: React.FC = () => {
                   {invoiceNo ? (
                     <Input
                       id="invoiceNo"
-                      defaultValue={invoiceNo}
                       {...field}
-                      placeholder="Invoice Number"
+                      placeholder="e.g. INV0001"
                       disabled={isPending}
                     />
                   ) : (
@@ -202,34 +203,58 @@ const CreateInvoiceForm: React.FC = () => {
           />
 
           {/* Issue Date */}
-          <Controller
-            control={control}
+          <FormField
+            control={form.control}
             name="issueDate"
-            render={({ field: { value, onChange } }) => (
-              <DatePicker
-                date={value}
-                onSelect={(selectedDate) => {
-                  if (selectedDate !== value) {
-                    onChange(selectedDate);
-                  }
-                }}
-              />
+            render={() => (
+              <FormItem>
+                <FormLabel>Issue Date</FormLabel>
+                <FormControl>
+                  <Controller
+                    control={control}
+                    name="issueDate"
+                    render={({ field: { value, onChange } }) => (
+                      <DatePicker
+                        date={value}
+                        onSelect={(selectedDate) => {
+                          if (selectedDate !== value) {
+                            onChange(selectedDate);
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
 
           {/* Due Date */}
-          <Controller
-            control={control}
+          <FormField
+            control={form.control}
             name="dueDate"
-            render={({ field: { value, onChange } }) => (
-              <DatePicker
-                date={value}
-                onSelect={(selectedDate) => {
-                  if (selectedDate !== value) {
-                    onChange(selectedDate);
-                  }
-                }}
-              />
+            render={() => (
+              <FormItem>
+                <FormLabel>Due Date</FormLabel>
+                <FormControl>
+                  <Controller
+                    control={control}
+                    name="dueDate"
+                    render={({ field: { value, onChange } }) => (
+                      <DatePicker
+                        date={value}
+                        onSelect={(selectedDate) => {
+                          if (selectedDate !== value) {
+                            onChange(selectedDate);
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
         </div>
@@ -239,7 +264,7 @@ const CreateInvoiceForm: React.FC = () => {
         {/* From and Bill To Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* From Section */}
-          <div>
+          <div className="space-y-4">
             <h2 className="text-lg font-semibold mb-2">From</h2>
             <FormField
               control={form.control}
@@ -309,7 +334,7 @@ const CreateInvoiceForm: React.FC = () => {
           </div>
 
           {/* Bill To Section */}
-          <div>
+          <div className="space-y-4">
             <h2 className="text-lg font-semibold mb-2">Bill To</h2>
             <FormField
               control={form.control}
@@ -402,9 +427,9 @@ const CreateInvoiceForm: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Description</TableHead>
-                  <TableHead>Rate ($)</TableHead>
+                  <TableHead>Unit Price</TableHead>
                   <TableHead>Quantity</TableHead>
-                  <TableHead>Amount ($)</TableHead>
+                  <TableHead>Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -412,53 +437,67 @@ const CreateInvoiceForm: React.FC = () => {
                   <TableRow key={item.id}>
                     <TableCell className="min-w-[150px]">
                       <Input
-                        {...form.register(`items.${index}.description`)}
+                        value={form.watch(`items.${index}.description`)}
+                        onChange={(e) =>
+                          setValue(`items.${index}.description`, e.target.value)
+                        }
                         placeholder="Item Description"
                       />
                     </TableCell>
                     <TableCell className="min-w-[100px]">
-                      <Input
-                        type="number"
-                        {...form.register(`items.${index}.price`)}
-                        placeholder="Rate"
-                        onChange={(e) =>
-                          setValue(
-                            `items.${index}.price`,
-                            parseFloat(e.target.value)
-                          )
-                        }
-                      />
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                          $
+                        </span>
+                        <Input
+                          type="number"
+                          className="pl-6"
+                          step="0.01"
+                          value={
+                            form.watch(`items.${index}.price`).toFixed(2) || 0
+                          }
+                          onChange={(e) =>
+                            setValue(
+                              `items.${index}.price`,
+                              parseFloat(e.target.value)
+                            )
+                          }
+                          placeholder="Price"
+                        />
+                      </div>
                     </TableCell>
+
                     <TableCell className="min-w-[100px]">
                       <Input
                         type="number"
-                        {...form.register(`items.${index}.quantity`)}
-                        placeholder="Quantity"
+                        value={form.watch(`items.${index}.quantity`)}
                         onChange={(e) =>
                           setValue(
                             `items.${index}.quantity`,
                             parseFloat(e.target.value)
                           )
                         }
+                        placeholder="Quantity"
                       />
                     </TableCell>
                     <TableCell className="min-w-[100px]">
-                      <Input
-                        type="number"
-                        readOnly
-                        {...form.register(`items.${index}.total`)}
-                        value={form.watch(`items.${index}.total`)}
-                        placeholder="Amount"
-                      />
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                          $
+                        </span>
+                        <Input
+                          type="number"
+                          className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                          readOnly
+                          step="0.01"
+                          value={form.watch(`items.${index}.total`).toFixed(2)}
+                          placeholder="Amount"
+                        />
+                      </div>
                     </TableCell>
+
                     <TableCell className="min-w-[100px]">
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        onClick={() => remove(index)}
-                      >
-                        Remove
-                      </Button>
+                      <ConfirmDeleteDialog onConfirm={() => remove(index)} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -482,13 +521,19 @@ const CreateInvoiceForm: React.FC = () => {
         {/* Tax and Total Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormItem>
-            <FormLabel>Tax Rate (%)</FormLabel>
+            <FormLabel>Tax Rate</FormLabel>
             <FormControl>
-              <Input
-                type="number"
-                value={taxRate}
-                onChange={(e) => setTaxRate(parseFloat(e.target.value))}
-              />
+              <div className="relative">
+                <Input
+                  type="number"
+                  value={taxRate}
+                  onChange={(e) => setTaxRate(parseFloat(e.target.value))}
+                  className="pr-8"
+                />
+                <span className="absolute right-[33rem] top-1/2 transform -translate-y-1/2 text-muted-foreground text-sm">
+                  %
+                </span>
+              </div>
             </FormControl>
           </FormItem>
 
@@ -497,9 +542,20 @@ const CreateInvoiceForm: React.FC = () => {
             name="taxAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tax Amount ($)</FormLabel>
+                <FormLabel>Tax Amount</FormLabel>
                 <FormControl>
-                  <Input {...field} readOnly />
+                  <div className="relative">
+                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                      $
+                    </span>
+                    <Input
+                      {...field}
+                      readOnly
+                      step="0.01"
+                      value={form.watch("taxAmount")?.toFixed(2)}
+                      className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -512,9 +568,22 @@ const CreateInvoiceForm: React.FC = () => {
           name="totalAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Total Amount ($)</FormLabel>
+              <FormLabel className="underline-offset-4 underline">
+                Total Amount
+              </FormLabel>
               <FormControl>
-                <Input {...field} readOnly />
+                <div className="relative">
+                  <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                    $
+                  </span>
+                  <Input
+                    {...field}
+                    readOnly
+                    step="0.01"
+                    value={form.watch("totalAmount")?.toFixed(2)}
+                    className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
