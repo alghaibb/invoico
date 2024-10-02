@@ -16,9 +16,10 @@ import {
 interface DatePickerProps {
   date: Date | undefined; // Allow undefined as the initial state
   onSelect: (date: Date) => void;
+  disabled?: boolean;
 }
 
-export function DatePicker({ date, onSelect }: DatePickerProps) {
+export function DatePicker({ date, onSelect, disabled }: DatePickerProps) {
   // Provide a fallback for the initial date if date is undefined
   const selectedDate = date || new Date();
 
