@@ -38,7 +38,7 @@ const MobileNav = () => {
   return (
     <>
       <button onClick={toggleMenu} aria-label="Open Menu">
-        <RxHamburgerMenu className="w-7 h-7" />
+        <RxHamburgerMenu className="w-7 h-7 text-secondary" />
       </button>
 
       <div className={`${styles["mobile-menu"]} ${isOpen ? styles.open : ""}`}>

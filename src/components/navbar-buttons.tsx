@@ -43,10 +43,12 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
       ) : (
         <>
           <Link href="/login">
-            <Button variant="outline">Login</Button>
+            <Button variant="link" className="text-secondary">
+              Login
+            </Button>
           </Link>
           <Link href="/create-account">
-            <Button>Create Account</Button>
+            <Button variant="navbar">Create Account</Button>
           </Link>
         </>
       )}
