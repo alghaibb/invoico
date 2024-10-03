@@ -36,4 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/src/app/api/(REST)/invoice/create-invoice/
+
+
