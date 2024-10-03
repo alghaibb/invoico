@@ -1,0 +1,5 @@
+{
+  "ignoreFiles": [
+    "src/app/api/(REST)/invoice/create-invoice/route.ts"
+  ]
+}
