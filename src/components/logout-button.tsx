@@ -14,7 +14,10 @@ export const LogoutButton = ({ children, className }: LogoutButtonProps) => {
   };
 
   return (
-    <span onClick={onClick} className={`cursor-pointer ${className}`}>
+    <span
+      onClick={onClick}
+      className={`cursor-pointer text-muted ${className}`}
+    >
       {children}
     </span>
   );

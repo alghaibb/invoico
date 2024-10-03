@@ -1,5 +1,5 @@
-import { generateInvoiceNumber } from "./generateInvoiceNumber";
+import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser } from "./generateInvoiceNumber";
 import { limitGuestInvoices } from "./limitGuest";
 import { limitUserInvoices } from "./limitUser";
 
-export { generateInvoiceNumber, limitGuestInvoices, limitUserInvoices };
+export { generateInvoiceNumberForGuest, generateInvoiceNumberForUser, limitGuestInvoices, limitUserInvoices };

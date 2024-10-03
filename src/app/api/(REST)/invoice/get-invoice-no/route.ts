@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { generateInvoiceNumber } from '@/utils/invoice';
+import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser } from '@/utils/invoice';
 import { getSession } from '@/utils/session';
 import { getIp } from '@/lib/get-ip';
 
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     if (userId) {
       // If the user is authenticated, generate the next invoice number for the user
-      generatedInvoiceNo = await generateInvoiceNumber();
+      generatedInvoiceNo = await generateInvoiceNumberForUser(userId);
       return NextResponse.json({ invoiceNo: generatedInvoiceNo }, { status: 200 });
     } else {
       // For guest users, track by IP address
@@ -22,18 +22,8 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Unable to retrieve guest IP' }, { status: 400 });
       }
 
-      // Find guest usage based on IP
-      let guestUsage = await prisma.guestUsage.findUnique({
-        where: { ipAddress: guestIp },
-      });
-
-      // If no guestUsage exists, this is their first invoice
-      if (!guestUsage) {
-        generatedInvoiceNo = 'inv0001';
-      } else {
-        // Otherwise, generate based on the number of previous invoices
-        generatedInvoiceNo = `inv${(guestUsage.invoices + 1).toString().padStart(4, '0')}`;
-      }
+      // Generate the next invoice number for the guest
+      generatedInvoiceNo = await generateInvoiceNumberForGuest(guestIp);
 
       return NextResponse.json({ invoiceNo: generatedInvoiceNo }, { status: 200 });
     }

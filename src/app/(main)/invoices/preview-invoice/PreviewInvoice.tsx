@@ -11,6 +11,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import html2canvas from "html2canvas";
 
 // Define the type for invoiceData using the Zod schema or Prisma model
 type InvoiceData = z.infer<typeof InvoiceCreateSchema>;
@@ -36,6 +38,12 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
     html2pdf(input, {
       margin: 20,
       filename: `${filename}.pdf`,
+      html2canvas: {
+        ignoreElements: (element: { id: string }) => {
+          // Ignore the download button
+          return element.id === "download-pdf";
+        },
+      },
     });
   };
 
@@ -46,7 +54,7 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
         <h1 className="md:text-4xl w-full font-bold text-2xl">
           {invoice.invoiceTitle}
         </h1>
-        <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0">
           <div className="w-full md:w-1/2">
             <h2 className="text-xl font-semibold">{invoice.fromName}</h2>
             <p className="text-sm">{invoice.fromAddress}</p>
@@ -54,8 +62,11 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
             <p className="text-sm">{invoice.fromPhoneNumber}</p>
             <p className="text-sm">ABN: {invoice.abn}</p>
           </div>
-          <div className="w-full md:w-1/2 text-right">
-            <h3 className="text-lg font-bold">Invoice #{invoice.invoiceNo}</h3>
+          <Separator className="md:hidden" />
+          <div className="w-full md:w-1/2 md:text-right">
+            <h3 className="text-lg font-bold">
+              Invoice Number: #{invoice.invoiceNo}
+            </h3>
             <p className="text-sm">
               Date: {new Date(invoice.issueDate).toLocaleDateString()}
             </p>
@@ -108,7 +119,7 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
         <hr className="my-6" />
 
         {/* Summary of Total Amount and Tax */}
-        <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0">
           <div className="w-full md:w-1/2">
             <p>
               <strong>Subtotal:</strong> AUD $
@@ -119,7 +130,8 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
               {invoice.taxAmount?.toFixed(2)}
             </p>
           </div>
-          <div className="w-full md:w-1/2 text-right">
+          <Separator className="md:hidden" />
+          <div className="w-full md:w-1/2 md:text-right">
             <h4 className="font-bold text-lg">Total Amount</h4>
             <p className="text-2xl font-semibold">
               AUD ${invoice.totalAmount.toFixed(2)}
@@ -128,7 +140,11 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
         </div>
 
         <div className="mt-6 text-center md:text-right">
-          <Button onClick={downloadPDF} className="w-full md:w-min">
+          <Button
+            onClick={downloadPDF}
+            className="w-full md:w-min"
+            id="download-pdf"
+          >
             Download PDF
           </Button>
         </div>

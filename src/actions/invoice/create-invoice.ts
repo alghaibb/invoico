@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { generateInvoiceNumber, limitGuestInvoices, limitUserInvoices } from "@/utils/invoice";
+import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser, limitGuestInvoices, limitUserInvoices } from "@/utils/invoice";
 import { InvoiceCreateSchema } from "@/validations/invoice";
 import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
@@ -48,7 +48,7 @@ export const createInvoice = actionClient
         await limitUserInvoices(userId);
 
         // Generate an invoice number if not provided
-        generatedInvoiceNo = invoiceNo || await generateInvoiceNumber();
+        generatedInvoiceNo = invoiceNo || `USER-${await generateInvoiceNumberForUser(userId)}`;
 
         // Create the invoice for a registered user
         const invoice = await prisma.invoice.create({
@@ -96,14 +96,14 @@ export const createInvoice = actionClient
           };
         }
 
-        // Generate an invoice number if not provided
-        generatedInvoiceNo = invoiceNo || await generateInvoiceNumber();
-
         // Get the guest's IP address to track their invoices
         const guestIp = getIp();
         if (!guestIp) {
           throw new Error("Unable to retrieve guest IP");
         }
+
+        // Generate an invoice number if not provided
+        generatedInvoiceNo = invoiceNo || `GUEST-${await generateInvoiceNumberForGuest(guestIp)}`;
 
         // Ensure the GuestUsage record exists for the guest IP
         let guestUsage = await prisma.guestUsage.findUnique({

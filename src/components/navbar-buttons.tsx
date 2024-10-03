@@ -23,7 +23,7 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
       {isAuthenticated ? (
         <>
           <Link href="/account">
-            <Button>Account</Button>
+            <Button variant="navbar">Account</Button>
           </Link>
           <TooltipProvider>
             <Tooltip>

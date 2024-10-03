@@ -30,6 +30,7 @@ import { LoadingDots } from "@/components/ui/loading";
 import { useToast } from "@/hooks/use-toast";
 import ConfirmDeleteDialog from "@/components/ui/confirm-delete-dialog";
 import { useRouter } from "next/navigation";
+import { Message } from "@/components/ui/custom-message";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
@@ -127,21 +128,19 @@ const CreateInvoiceForm: React.FC = () => {
         const response = await createInvoice(data);
 
         if (response?.data?.error) {
-          toast({
-            title: "Error",
-            description: response?.data?.error,
-            variant: "destructive",
-          });
+          setError(response?.data?.error);
+          // Scroll to top of the page
+          window.scrollTo({ top: 0, behavior: "instant" });
         } else {
           const invoiceId = response?.data?.invoice?.id ?? "";
 
           toast({
             title: "Success!",
-            description: response?.data?.success,
+            description: `${response?.data?.success}, redirecting to invoice preview page...`,
           });
           // Delay for 2 seconds before redirecting
           setTimeout(() => {
-            router.push(`/invoices/preview-invoice/${invoiceId}`); // Navigate to the invoice preview page with the ID
+            router.push(`/invoices/preview-invoice/${invoiceId}`);
           }, 2000); // 2-second delay
         }
       } catch (err) {
@@ -153,8 +152,33 @@ const CreateInvoiceForm: React.FC = () => {
     });
   };
 
+  const resetFormFields = () => {
+    form.reset({
+      invoiceTitle: "",
+      invoiceNo: "",
+      fromName: "",
+      fromEmail: "",
+      fromAddress: "",
+      fromPhoneNumber: "",
+      abn: "",
+      toName: "",
+      toEmail: "",
+      toAddress: "",
+      toPhoneNumber: "",
+      toMobile: "",
+      toFax: "",
+      issueDate: new Date(),
+      dueDate: new Date(),
+      totalAmount: 0,
+      taxAmount: 0,
+      taxRate: 10,
+      items: [{ description: "", quantity: 1, price: 0, total: 0 }],
+    });
+  };
+
   return (
     <Form {...form}>
+      {error && <Message type="error" message={error} />}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10">
         {/* Invoice Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -572,9 +596,7 @@ const CreateInvoiceForm: React.FC = () => {
           name="totalAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="underline-offset-4 underline">
-                Total Amount
-              </FormLabel>
+              <FormLabel>Total Amount</FormLabel>
               <FormControl>
                 <div className="relative">
                   <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
@@ -595,13 +617,25 @@ const CreateInvoiceForm: React.FC = () => {
         />
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          className="w-full mt-6 md:w-auto"
-          disabled={isPending || !invoiceNo}
-        >
-          {isPending ? <LoadingDots /> : "Create Invoice"}
-        </Button>
+        <div className="flex flex-col md:flex-row justify-between w-full">
+          <Button
+            type="submit"
+            className="w-full mt-6 md:w-auto"
+            disabled={isPending || !invoiceNo}
+          >
+            {isPending ? <LoadingDots /> : "Create Invoice"}
+          </Button>
+
+          {/* Reset Form Fields Button */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={resetFormFields}
+            className="w-full mt-4 md:w-auto"
+          >
+            Reset Form
+          </Button>
+        </div>
       </form>
     </Form>
   );
