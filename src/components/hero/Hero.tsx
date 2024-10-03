@@ -6,14 +6,14 @@ import { FaArrowDown } from "react-icons/fa";
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center justify-center mt-20 bg-gradient-to-r from-purple-500 to bg-primary min-h-screen">
-      <div className="container grid grid-cols-1 gap-8 px-6 py-16 text-secondary md:grid-cols-2 animate-fade-in">
+    <section className="relative flex items-center justify-center mt-20 min-h-screen">
+      <div className="container grid grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 animate-fade-in">
         {/* Left: Text and CTA */}
         <div className="flex flex-col justify-center space-y-6">
-          <h1 className="text-5xl font-bold md:text-7xl text-secondary drop-shadow-lg">
+          <h1 className="text-5xl font-bold md:text-7xl drop-shadow-lg">
             Create Your Invoices in Minutes
           </h1>
-          <p className="text-xl md:text-2xl text-secondary/90">
+          <p className="text-xl md:text-2xl text-muted-foreground">
             Manage your billing and invoicing effortlessly. With our invoicing
             tool, creating and managing invoices is quick and simple.
           </p>
