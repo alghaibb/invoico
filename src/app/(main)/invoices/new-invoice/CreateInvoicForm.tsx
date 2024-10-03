@@ -29,7 +29,7 @@ import {
 import { LoadingDots } from "@/components/ui/loading";
 import { useToast } from "@/hooks/use-toast";
 import ConfirmDeleteDialog from "@/components/ui/confirm-delete-dialog";
-import InvoicePreviewModal from "@/components/invoice-preview-modal";
+import { useRouter } from "next/navigation";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
@@ -37,8 +37,8 @@ type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
 const CreateInvoiceForm: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const [invoiceNo, setInvoiceNo] = useState("");
-  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const { toast } = useToast();
 
@@ -133,11 +133,16 @@ const CreateInvoiceForm: React.FC = () => {
             variant: "destructive",
           });
         } else {
+          const invoiceId = response?.data?.invoice?.id ?? "";
+
           toast({
             title: "Success!",
             description: response?.data?.success,
           });
-          form.reset();
+          // Delay for 2 seconds before redirecting
+          setTimeout(() => {
+            router.push(`/invoices/preview-invoice/${invoiceId}`); // Navigate to the invoice preview page with the ID
+          }, 2000); // 2-second delay
         }
       } catch (err) {
         console.error("Error creating invoice:", err);
@@ -150,19 +155,6 @@ const CreateInvoiceForm: React.FC = () => {
 
   return (
     <Form {...form}>
-      <Button
-        variant="outline"
-        type="button"
-        onClick={() => setPreviewModalOpen(true)}
-      >
-        Preview Invoice
-      </Button>
-      <InvoicePreviewModal
-        isOpen={previewModalOpen}
-        onClose={() => setPreviewModalOpen(false)}
-        invoiceData={form.getValues()}
-      />
-      <Separator className="my-6" />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10">
         {/* Invoice Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">

@@ -176,6 +176,7 @@ model Invoice {
   dueDate         DateTime
   status          InvoiceStatus @default(PENDING)
   totalAmount     Float
+  taxRate         Float?
   taxAmount       Float?
 
   userId  String?

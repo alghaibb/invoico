@@ -31,6 +31,7 @@ export const createInvoice = actionClient
       dueDate,
       status,
       totalAmount,
+      taxRate,
       taxAmount,
       items,
     } = parsedInput;
@@ -69,6 +70,7 @@ export const createInvoice = actionClient
             dueDate,
             status,
             totalAmount,
+            taxRate: taxRate,
             taxAmount: taxAmount || null,
             InvoiceItem: {
               create: items.map(item => ({
@@ -138,6 +140,7 @@ export const createInvoice = actionClient
             dueDate,
             status,
             totalAmount,
+            taxRate: taxRate,
             taxAmount: taxAmount || null,
             InvoiceItem: {
               create: items.map(item => ({
