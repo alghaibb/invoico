@@ -43,7 +43,7 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
       ) : (
         <>
           <Link href="/login">
-            <Button variant="link" className="text-secondary">
+            <Button variant="ghost" className="text-secondary">
               Login
             </Button>
           </Link>
