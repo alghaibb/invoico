@@ -19,7 +19,6 @@ import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
 import { LoadingDots } from "@/components/loading";
 import InvoiceActionsDropdown from "@/components/invoice-action-dropdown";
-
 type InvoiceItem = {
   description: string;
   quantity: number;
@@ -152,7 +151,9 @@ export default function InvoiceTable() {
                     <InvoiceStatusBadge status={invoice.status} />
                   </TableCell>
                   <TableCell>
-                    <InvoiceActionsDropdown invoiceId={invoice.id} />
+                    <InvoiceActionsDropdown
+                      invoiceId={invoice.id}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

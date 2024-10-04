@@ -16,10 +16,14 @@ import { FaTrash, FaX, FaCheck } from "react-icons/fa6";
 
 interface ConfirmDeleteDialogProps {
   onConfirm: () => void;
+  title?: string;
+  description?: string;
 }
 
 const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
   onConfirm,
+  title = "Confirm Deletion",
+  description = "Are you sure you want to delete this item? This action cannot be undone.",
 }) => {
   return (
     <AlertDialog>
@@ -31,10 +35,8 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete this item?
-          </AlertDialogDescription>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
