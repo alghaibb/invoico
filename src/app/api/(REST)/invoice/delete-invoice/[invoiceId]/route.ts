@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/utils/session";
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
     await prisma.invoice.delete({
       where: { id: invoiceId },
     });
+
+    revalidatePath("/invoices");
 
     return NextResponse.json({ success: "Invoice successfully deleted" }, { status: 200 });
   } catch (error) {
