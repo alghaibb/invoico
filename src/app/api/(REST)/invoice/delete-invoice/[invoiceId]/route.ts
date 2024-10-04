@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/utils/session";
 
+export const dynamic = "force-dynamic";
+
 export async function DELETE(req: NextRequest, { params }: { params: { invoiceId: string } }) {
   const invoiceId = params.invoiceId;
 
