@@ -7,11 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 
 // Reusable component for the three-dot action menu
 const InvoiceActionsDropdown = ({ invoiceId }: { invoiceId: string }) => {
@@ -65,19 +64,18 @@ const InvoiceActionsDropdown = ({ invoiceId }: { invoiceId: string }) => {
   };
 
   return (
-      <div className="relative">
-      {/* Loading overlay */}
-      {isDeleting && (
-        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-          <Loader2 className="w-6 h-6 animate-spin" />
-        </div>
-      )}
-
-      <DropdownMenu>
+     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none">
+          <button
+          className="flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+          disabled={isDeleting} // Disable the dropdown while deleting
+        >
+          {isDeleting ? (
+            <Loader2 className="w-5 h-5 animate-spin" /> // Spinner icon when deleting
+          ) : (
             <MoreHorizontal className="w-5 h-5" />
-          </button>
+          )}
+            </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" align="end">
           <DropdownMenuItem onSelect={handleViewInvoice}>
@@ -96,7 +94,7 @@ const InvoiceActionsDropdown = ({ invoiceId }: { invoiceId: string }) => {
               onClick={handleDeleteInvoice}
               disabled={isDeleting}
             >
-              {isDeleting ? "Deleting..." : "Delete Invoice"}
+              Delete Invoice
             </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
