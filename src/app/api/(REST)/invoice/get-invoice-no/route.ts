@@ -5,7 +5,7 @@ import { getSession } from '@/utils/session';
 import { getIp } from '@/lib/get-ip';
 
 // Dynamically render the api route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {

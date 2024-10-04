@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
+import { FilterProvider } from "@/providers/FilterProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,17 +25,19 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${inter.className} min-h-screen flex flex-col relative`}
-        >
-          <main className="flex-grow">
-            <Navbar />
-            {children}
-          </main>
-          <Toaster />
-        </body>
-      </html>
+      <FilterProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${inter.className} min-h-screen flex flex-col relative`}
+          >
+            <main className="flex-grow">
+              <Navbar />
+              {children}
+            </main>
+            <Toaster />
+          </body>
+        </html>
+      </FilterProvider>
     </SessionProvider>
   );
 }
