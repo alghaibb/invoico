@@ -47,6 +47,8 @@ const InvoiceActionsDropdown = ({ invoiceId }: { invoiceId: string }) => {
           title: "Success",
           description: result.success,
         });
+        router.push("invoices");
+        window.location.href = "/invoices";
       } else {
         toast({
           title: "Error",
