@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getIp } from "@/lib/get-ip";
