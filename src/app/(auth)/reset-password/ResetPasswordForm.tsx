@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { resetPassword } from "@/actions/auth/reset-password"; 
+import { resetPassword } from "@/actions/auth/reset-password";
 import { useAction } from "next-safe-action/hooks";
 import { ResetPasswordSchema } from "@/validations/auth";
 import { Eye, EyeOff } from "lucide-react";
-import { LoadingDots } from "@/components/ui/loading";
-import { useRouter, useSearchParams } from "next/navigation"; 
-import { Message } from "@/components/ui/custom-message";
+import { LoadingDots } from "@/components/loading";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Message } from "@/components/custom-message";
 import CardWrapper from "@/components/card-wrapper";
 
 // Define types based on Zod schema

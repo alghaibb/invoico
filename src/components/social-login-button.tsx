@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { facebookLogin, googleLogin } from "@/actions/auth/social-login";
-import { LoadingDots } from "./ui/loading";
+import { LoadingDots } from "./loading";
 
 interface SocialLoginButtonProps {
   provider: "google" | "facebook";
@@ -16,7 +16,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
   label,
   icon,
   className,
-  type
+  type,
 }) => {
   const [isSocialLogin, setIsSocialLogin] = useState(false);
 

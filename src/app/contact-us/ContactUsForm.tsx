@@ -16,8 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { ContactFormSchema } from "@/validations";
-import { LoadingDots } from "@/components/ui/loading";
-import { Message } from "@/components/ui/custom-message";
+import { LoadingDots } from "@/components/loading";
+import { Message } from "@/components/custom-message";
 import CardWrapper from "@/components/card-wrapper";
 import { createContactMessage } from "@/actions/contact";
 

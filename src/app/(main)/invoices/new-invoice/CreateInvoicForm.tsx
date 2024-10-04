@@ -26,11 +26,11 @@ import {
   TableCell,
   TableHead,
 } from "@/components/ui/table";
-import { LoadingDots } from "@/components/ui/loading";
+import { LoadingDots } from "@/components/loading";
 import { useToast } from "@/hooks/use-toast";
-import ConfirmDeleteDialog from "@/components/ui/confirm-delete-dialog";
+import ConfirmDeleteDialog from "@/components/confirm-delete-dialog";
 import { useRouter } from "next/navigation";
-import { Message } from "@/components/ui/custom-message";
+import { Message } from "@/components/custom-message";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ResetPasswordPage from "./ResetPasswordPage";
 import { Suspense } from "react";
-import { LoadingDots } from "@/components/ui/loading";
+import { LoadingDots } from "@/components/loading";
 
 export const metadata: Metadata = {
   title: "Reset Password",
