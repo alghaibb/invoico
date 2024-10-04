@@ -3,8 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { getIp } from "@/lib/get-ip";
 import { getSession } from "@/utils/session";
 
-export const dynamic = "force dynamic";
-
 export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
