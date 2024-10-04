@@ -47,7 +47,6 @@ const InvoiceActionsDropdown = ({ invoiceId }: { invoiceId: string }) => {
           title: "Success",
           description: result.success,
         });
-        router.refresh();
       } else {
         toast({
           title: "Error",
