@@ -43,11 +43,6 @@ const InvoiceActionsDropdown = ({
     console.log(`Sending email for invoice ${invoiceId}`);
   };
 
-  const handleDownloadPDF = () => {
-    // Logic to download the invoice as PDF
-    console.log(`Downloading PDF for invoice ${invoiceId}`);
-  };
-
   const handleDeleteInvoice = async () => {
     setIsDeleting(true);
     setLoading(true);
@@ -158,12 +153,6 @@ const InvoiceActionsDropdown = ({
         >
           Email Invoice
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={handleDownloadPDF}
-          className="px-4 py-2 text-sm text-gray-700 cursor-pointer"
-        >
-          Download PDF
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={() => handleUpdateStatus("PAID")}
@@ -175,28 +164,6 @@ const InvoiceActionsDropdown = ({
             <Circle className="w-4 h-4 text-gray-400" />
           )}
           Mark as Paid
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={() => handleUpdateStatus("PENDING")}
-          className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer"
-        >
-          {status === "PENDING" ? (
-            <CheckCircle className="w-4 h-4 text-yellow-500" />
-          ) : (
-            <Circle className="w-4 h-4 text-gray-400" />
-          )}
-          Mark as Pending
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={() => handleUpdateStatus("OVERDUE")}
-          className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer"
-        >
-          {status === "OVERDUE" ? (
-            <CheckCircle className="w-4 h-4 text-red-500" />
-          ) : (
-            <Circle className="w-4 h-4 text-gray-400" />
-          )}
-          Mark as Overdue
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

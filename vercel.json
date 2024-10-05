@@ -1,0 +1,8 @@
+{
+  "cron": [
+    {
+      "path": "/api/invoice/mark-overdue-invoices",
+      "schedule": "0 0 * * *" 
+    }
+  ]
+}
