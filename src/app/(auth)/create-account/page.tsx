@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import CreateAccountPage from "./CreateAccountPage";
 
 export const metadata: Metadata = {

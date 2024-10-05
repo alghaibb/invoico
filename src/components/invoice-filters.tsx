@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useFilter } from "@/providers/FilterProvider";
-import { Separator } from "@/components/ui/separator";
 import { PiSortAscendingBold, PiSortDescendingBold } from "react-icons/pi";
+
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useFilter } from "@/providers/FilterProvider";
+
 
 // Sort arrow indicator
 const SortIndicator = ({ sortOrder }: { sortOrder: string }) => {

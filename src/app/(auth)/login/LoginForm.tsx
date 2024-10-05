@@ -1,9 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
+
+import { login } from "@/actions/auth/login";
+import CardWrapper from "@/components/card-wrapper";
+import { Message } from "@/components/custom-message";
+import { LoadingDots } from "@/components/loading";
+import SocialLoginButton from "@/components/social-login-button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -13,18 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { login } from "@/actions/auth/login";
-import { useAction } from "next-safe-action/hooks";
 import { LoginSchema } from "@/validations/auth";
-import { Eye, EyeOff } from "lucide-react";
-import { LoadingDots } from "@/components/loading";
-import { useRouter } from "next/navigation";
-import CardWrapper from "@/components/card-wrapper";
-import { Message } from "@/components/custom-message";
-import SocialLoginButton from "@/components/social-login-button";
-import { FaFacebook, FaGoogle } from "react-icons/fa6";
-import Link from "next/link";
 
 // Define types based on Zod schema
 type LoginFormData = z.infer<typeof LoginSchema>;

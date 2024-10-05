@@ -1,9 +1,11 @@
 // /app/api/invoices/[invoiceId]/route.ts
 
-import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/utils/session";
 import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from "next/server";
+
+import prisma from "@/lib/prisma";
+import { getSession } from "@/utils/session";
+
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
 
     // If there is no logged-in user, block deletion for guests
     if (!userId) {
-      return NextResponse.json({ error: "Guests are not allowed to delete invoices. Please log in." }, { status: 403 });
+      return NextResponse.json({ error: "Guests are not allowed to delete invoices." }, { status: 403 });
     }
 
     // Check if the invoice exists and belongs to the authenticated user

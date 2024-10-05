@@ -1,12 +1,13 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { getUserByEmail } from "@/utils/user/getUser";
-import { actionClient } from "@/lib/safe-action";
-import { LoginSchema } from "@/validations/auth";
 import { flattenValidationErrors } from "next-safe-action";
+
 import { signIn } from "@/auth";
 import { rateLimitByIp } from "@/lib/limiter";
+import { actionClient } from "@/lib/safe-action";
+import { getUserByEmail } from "@/utils/user/getUser";
+import { LoginSchema } from "@/validations/auth";
 
 export const login = actionClient
   .schema(LoginSchema, {

@@ -1,15 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useTransition } from "react";
 import { useForm, useFieldArray, useWatch, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createInvoice } from "@/actions/invoice/create-invoice";
-import { InvoiceCreateSchema } from "@/validations/invoice";
 import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+
+import { createInvoice } from "@/actions/invoice/create-invoice";
+import ConfirmDeleteDialog from "@/components/confirm-delete-dialog";
+import { Message } from "@/components/custom-message";
 import { DatePicker } from "@/components/date-picker";
+import { LoadingDots } from "@/components/loading";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -18,6 +20,8 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableHeader,
@@ -26,11 +30,8 @@ import {
   TableCell,
   TableHead,
 } from "@/components/ui/table";
-import { LoadingDots } from "@/components/loading";
 import { useToast } from "@/hooks/use-toast";
-import ConfirmDeleteDialog from "@/components/confirm-delete-dialog";
-import { useRouter } from "next/navigation";
-import { Message } from "@/components/custom-message";
+import { InvoiceCreateSchema } from "@/validations/invoice";
 
 // Infer form types from Zod schema
 type InvoiceFormData = z.infer<typeof InvoiceCreateSchema>;
@@ -179,9 +180,9 @@ const CreateInvoiceForm: React.FC = () => {
   return (
     <Form {...form}>
       {error && <Message type="error" message={error} />}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-10 space-y-8">
         {/* Invoice Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div className="flex flex-col items-center justify-between mb-6 md:flex-row">
           <FormField
             control={form.control}
             name="invoiceTitle"
@@ -191,7 +192,7 @@ const CreateInvoiceForm: React.FC = () => {
                   <Input
                     {...field}
                     placeholder="Invoice Title"
-                    className="text-2xl md:text-3xl font-semibold w-full md:py-6"
+                    className="w-full text-2xl font-semibold md:text-3xl md:py-6"
                     disabled={isPending}
                   />
                 </FormControl>
@@ -288,10 +289,10 @@ const CreateInvoiceForm: React.FC = () => {
         <Separator className="my-6" />
 
         {/* From and Bill To Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* From Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold mb-2">From</h2>
+            <h2 className="mb-2 text-lg font-semibold">From</h2>
             <FormField
               control={form.control}
               name="fromName"
@@ -361,7 +362,7 @@ const CreateInvoiceForm: React.FC = () => {
 
           {/* Bill To Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold mb-2">Bill To</h2>
+            <h2 className="mb-2 text-lg font-semibold">Bill To</h2>
             <FormField
               control={form.control}
               name="toName"
@@ -447,7 +448,7 @@ const CreateInvoiceForm: React.FC = () => {
 
         {/* Invoice Items */}
         <div className="py-4">
-          <h2 className="text-lg font-semibold mb-4">Invoice Items</h2>
+          <h2 className="mb-4 text-lg font-semibold">Invoice Items</h2>
           <div className="overflow-x-auto">
             <Table className="min-w-full">
               <TableHeader>
@@ -472,7 +473,7 @@ const CreateInvoiceForm: React.FC = () => {
                     </TableCell>
                     <TableCell className="min-w-[100px]">
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                        <span className="absolute transform -translate-y-1/2 left-2 top-1/2 text-muted-foreground">
                           $
                         </span>
                         <Input
@@ -508,12 +509,12 @@ const CreateInvoiceForm: React.FC = () => {
                     </TableCell>
                     <TableCell className="min-w-[100px]">
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                        <span className="absolute transform -translate-y-1/2 left-2 top-1/2 text-muted-foreground">
                           $
                         </span>
                         <Input
                           type="number"
-                          className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                          className="pl-6 border-none pointer-events-none focus:ring-0 focus:outline-none"
                           readOnly
                           step="0.01"
                           value={form.watch(`items.${index}.total`).toFixed(2)}
@@ -545,7 +546,7 @@ const CreateInvoiceForm: React.FC = () => {
         <Separator className="my-6" />
 
         {/* Tax and Total Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormItem>
             <FormLabel>Tax Rate</FormLabel>
             <FormControl>
@@ -573,7 +574,7 @@ const CreateInvoiceForm: React.FC = () => {
                 <FormLabel>Tax Amount</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                    <span className="absolute transform -translate-y-1/2 left-2 top-1/2 text-muted-foreground">
                       $
                     </span>
                     <Input
@@ -581,7 +582,7 @@ const CreateInvoiceForm: React.FC = () => {
                       readOnly
                       step="0.01"
                       value={form.watch("taxAmount")?.toFixed(2)}
-                      className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                      className="pl-6 border-none pointer-events-none focus:ring-0 focus:outline-none"
                     />
                   </div>
                 </FormControl>
@@ -599,7 +600,7 @@ const CreateInvoiceForm: React.FC = () => {
               <FormLabel>Total Amount</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  <span className="absolute transform -translate-y-1/2 left-2 top-1/2 text-muted-foreground">
                     $
                   </span>
                   <Input
@@ -607,7 +608,7 @@ const CreateInvoiceForm: React.FC = () => {
                     readOnly
                     step="0.01"
                     value={form.watch("totalAmount")?.toFixed(2)}
-                    className="pl-6 border-none focus:ring-0 focus:outline-none pointer-events-none"
+                    className="pl-6 border-none pointer-events-none focus:ring-0 focus:outline-none"
                   />
                 </div>
               </FormControl>
@@ -617,7 +618,7 @@ const CreateInvoiceForm: React.FC = () => {
         />
 
         {/* Submit Button */}
-        <div className="flex flex-col md:flex-row justify-between w-full">
+        <div className="flex flex-col justify-between w-full md:flex-row">
           <Button
             type="submit"
             className="w-full mt-6 md:w-auto"

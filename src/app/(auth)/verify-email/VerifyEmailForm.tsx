@@ -1,9 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
+import { verifyEmail } from "@/actions/auth/verify-email";
+import CardWrapper from "@/components/card-wrapper";
+import { Message } from "@/components/custom-message";
+import { LoadingDots } from "@/components/loading";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -13,20 +21,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { verifyEmail } from "@/actions/auth/verify-email";
-import { useAction } from "next-safe-action/hooks";
-import { VerifyEmailSchema } from "@/validations/auth";
-import { LoadingDots } from "@/components/loading";
-import { useRouter } from "next/navigation";
-import CardWrapper from "@/components/card-wrapper";
-import { Message } from "@/components/custom-message";
 import {
   InputOTP,
   InputOTPSlot,
   InputOTPGroup,
   InputOTPSeparator,
 } from "@/components/ui/input-otp";
+import { VerifyEmailSchema } from "@/validations/auth";
 
 // Define types based on Zod schema
 type VerifyEmailFormData = z.infer<typeof VerifyEmailSchema>;

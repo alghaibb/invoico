@@ -1,7 +1,8 @@
 import { Separator } from "@/components/ui/separator";
-import PreviewInvoice from "./PreviewInvoice"; // Correct import path
 import prisma from "@/lib/prisma";
 import { InvoiceCreateSchema } from "@/validations/invoice";
+
+import PreviewInvoice from "./PreviewInvoice"; // Correct import path
 
 interface Params {
   invoiceId: string;
@@ -51,7 +52,7 @@ const PreviewInvoicePage = async ({ params }: { params: Params }) => {
   const parsedInvoice = InvoiceCreateSchema.parse(invoiceData);
   return (
     <div>
-      <h1 className="text-3xl md:text-5xl my-6 text-center font-semibold uppercase ">
+      <h1 className="my-6 text-3xl font-semibold text-center uppercase md:text-5xl ">
         Invoice Preview
       </h1>
       <Separator />

@@ -1,14 +1,17 @@
+/* eslint-disable import/named */
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { User } from "next-auth";
 import type { NextAuthConfig } from "next-auth";
-import Google from "next-auth/providers/google";
-import Facebook from "next-auth/providers/facebook";
-import Credentials from "next-auth/providers/credentials";
-import prisma from "./lib/prisma";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 import { encode as defaultEncode } from "next-auth/jwt";
+import Credentials from "next-auth/providers/credentials";
+import Facebook from "next-auth/providers/facebook";
+import Google from "next-auth/providers/google";
 import { v4 as uuid } from "uuid";
+
+import prisma from "./lib/prisma";
 import { getUserByEmail } from "./utils/user/getUser";
+
 
 const adapter = PrismaAdapter(prisma) as Adapter;
 

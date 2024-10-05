@@ -1,12 +1,13 @@
 "use server"
 
-import { getUserByEmail } from "@/utils/user/getUser"
-import { generateVerificationCode } from "@/utils/token"
-import { actionClient } from "@/lib/safe-action"
 import { flattenValidationErrors } from "next-safe-action"
-import { ResendVerificationEmailSchema } from "@/validations/auth"
-import { sendVerificationEmail } from "@/utils/sendEmails"
+
 import { rateLimitByIp } from "@/lib/limiter"
+import { actionClient } from "@/lib/safe-action"
+import { sendVerificationEmail } from "@/utils/sendEmails"
+import { generateVerificationCode } from "@/utils/token"
+import { getUserByEmail } from "@/utils/user/getUser"
+import { ResendVerificationEmailSchema } from "@/validations/auth"
 
 export const resendOtp = actionClient
   .schema(ResendVerificationEmailSchema, {

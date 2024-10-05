@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
 import { getIp } from "@/lib/get-ip";
+import prisma from "@/lib/prisma";
 
 const MAX_GUEST_INVOICES = 5;
 

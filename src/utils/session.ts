@@ -1,5 +1,6 @@
-import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
+
+import prisma from "@/lib/prisma";
 
 // Function to get session from Prisma using the session token
 export async function getSession() {

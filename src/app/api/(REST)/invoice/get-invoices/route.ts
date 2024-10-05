@@ -1,8 +1,9 @@
 export const dynamic = 'force-dynamic';
 
-import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
+
 import { getIp } from "@/lib/get-ip";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/utils/session";
 
 export async function GET(request: NextRequest) {

@@ -1,9 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
+import { resetPassword } from "@/actions/auth/reset-password";
+import CardWrapper from "@/components/card-wrapper";
+import { Message } from "@/components/custom-message";
+import { LoadingDots } from "@/components/loading";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -13,15 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { resetPassword } from "@/actions/auth/reset-password";
-import { useAction } from "next-safe-action/hooks";
 import { ResetPasswordSchema } from "@/validations/auth";
-import { Eye, EyeOff } from "lucide-react";
-import { LoadingDots } from "@/components/loading";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Message } from "@/components/custom-message";
-import CardWrapper from "@/components/card-wrapper";
 
 // Define types based on Zod schema
 type ResetPasswordFormData = z.infer<typeof ResetPasswordSchema>;

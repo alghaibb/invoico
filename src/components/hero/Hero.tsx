@@ -1,8 +1,9 @@
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import React from "react";
 import { FaArrowDown } from "react-icons/fa";
+
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (

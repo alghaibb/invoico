@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import CreateInvoicePage from "./CreateInvoicePage";
 
 export const metadata: Metadata = {

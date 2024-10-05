@@ -1,8 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAction } from "next-safe-action/hooks";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import { forgotPassword } from "@/actions/auth/forgot-password";
+import CardWrapper from "@/components/card-wrapper";
+import { Message } from "@/components/custom-message";
+import { LoadingDots } from "@/components/loading";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -12,14 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { forgotPassword } from "@/actions/auth/forgot-password";
-import { useAction } from "next-safe-action/hooks";
 import { ForgotPasswordSchema } from "@/validations/auth";
-import { LoadingDots } from "@/components/loading";
-import { Message } from "@/components/custom-message";
-import CardWrapper from "@/components/card-wrapper";
-import { z } from "zod";
 
 // Define types based on Zod schema
 type ForgotPasswordFormData = z.infer<typeof ForgotPasswordSchema>;

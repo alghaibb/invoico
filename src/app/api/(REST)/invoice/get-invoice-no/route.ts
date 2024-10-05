@@ -1,8 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
+
+import { getIp } from '@/lib/get-ip';
 import prisma from '@/lib/prisma';
 import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser } from '@/utils/invoice';
 import { getSession } from '@/utils/session';
-import { getIp } from '@/lib/get-ip';
 
 // Dynamically render the api route
 export const dynamic = "force-dynamic";

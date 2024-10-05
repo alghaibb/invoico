@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import ContactUsPage from "./ContactUsPage";
 
 export const metadata: Metadata = {

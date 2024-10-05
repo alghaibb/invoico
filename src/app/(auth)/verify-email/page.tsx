@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import VerifyEmailPage from "./VerifyEmailPage";
 
 export const metadata: Metadata = {

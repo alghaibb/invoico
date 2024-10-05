@@ -1,7 +1,10 @@
-import prisma from "@/lib/prisma";
-import crypto, { randomInt } from "crypto";
-import { getUserByEmail } from "./user/getUser";
 import { error } from "console";
+import crypto, { randomInt } from "crypto";
+
+import prisma from "@/lib/prisma";
+
+import { getUserByEmail } from "./user/getUser";
+
 
 // -------------------- OTP GENERATION FUNCTIONS --------------------
 

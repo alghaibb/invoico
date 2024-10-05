@@ -1,11 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { rateLimitByIp } from "@/lib/limiter";
-import { actionClient } from "@/lib/safe-action";
-import { ContactFormSchema } from "@/validations";
 import { flattenValidationErrors } from "next-safe-action";
+
+import { rateLimitByIp } from "@/lib/limiter";
+import prisma from "@/lib/prisma";
+import { actionClient } from "@/lib/safe-action";
 import { getSession } from "@/utils/session";
+import { ContactFormSchema } from "@/validations";
 
 export const createContactMessage = actionClient
   .schema(ContactFormSchema, {

@@ -1,14 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { navbarLinks } from "@/constants";
-import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { LogoutButton } from "../logout-button";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
+import React, { useState, useEffect } from "react";
+import { RxHamburgerMenu } from "react-icons/rx";
+
+import { Button } from "@/components/ui/button";
+import { navbarLinks } from "@/constants";
 import styles from "@/styles/mobileNav.module.css";
+
+
+import { LogoutButton } from "../logout-button";
+
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);

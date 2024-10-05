@@ -1,4 +1,4 @@
-import VerifyEmail from "./VerifyEmail";
 import ForgotPassword from "./ForgotPassword";
+import VerifyEmail from "./VerifyEmail";
 
 export { VerifyEmail, ForgotPassword };

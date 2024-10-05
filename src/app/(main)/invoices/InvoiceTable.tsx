@@ -1,7 +1,16 @@
 "use client";
 
+import { InvoiceStatus } from "@prisma/client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CiCirclePlus } from "react-icons/ci";
+
+import InvoiceActionsDropdown from "@/components/invoice-action-dropdown";
+import { InvoiceFilters } from "@/components/invoice-filters";
+import { LoadingDots } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableHeader,
@@ -10,15 +19,10 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
-import { InvoiceFilters } from "@/components/invoice-filters";
 import { useFilter } from "@/providers/FilterProvider";
+import { useLoadingStore } from "@/stores/loadingStore";
 import { formatCurrency, formatDate } from "@/utils/format";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { CiCirclePlus } from "react-icons/ci";
-import { LoadingDots } from "@/components/loading";
-import InvoiceActionsDropdown from "@/components/invoice-action-dropdown";
+
 type InvoiceItem = {
   description: string;
   quantity: number;
@@ -59,6 +63,7 @@ const InvoiceStatusBadge = ({ status }: { status: string }) => {
 export default function InvoiceTable() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const isLoading = useLoadingStore((state) => state.isLoading);
 
   const { status, sortBy, sortOrder } = useFilter();
 
@@ -96,11 +101,19 @@ export default function InvoiceTable() {
   });
 
   if (loading) {
-    return <LoadingDots />;
+    return (
+      <div className="bg-none">
+        <LoadingDots />
+      </div>
+    );
   }
 
   return (
     <div className="container p-6 mx-auto">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"></div>
+      )}
+
       {/* Button and heading wrapper */}
       <div className="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row md:gap-0">
         <h1 className="text-3xl font-semibold">Your Invoices</h1>
@@ -153,6 +166,7 @@ export default function InvoiceTable() {
                   <TableCell>
                     <InvoiceActionsDropdown
                       invoiceId={invoice.id}
+                      initialStatus={invoice.status}
                     />
                   </TableCell>
                 </TableRow>

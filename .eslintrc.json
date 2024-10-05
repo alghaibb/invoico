@@ -1,3 +1,22 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "plugin:import/recommended"],
+  "plugins": ["import"],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin", // Built-in Node.js modules (e.g., 'fs', 'path')
+          "external", // External modules (e.g., 'react', 'next')
+          "internal", // Internal project files
+          ["parent", "sibling", "index"] // Relative imports
+        ],
+        "newlines-between": "always", // Ensure there is a newline between groups
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  }
 }

@@ -1,7 +1,8 @@
-import Link from "next/link";
-import { Button } from "./ui/button";
-import { LogoutButton } from "./logout-button";
 import { LogOutIcon } from "lucide-react";
+import Link from "next/link";
+
+import { LogoutButton } from "./logout-button";
+import { Button } from "./ui/button";
 import {
   Tooltip,
   TooltipTrigger,

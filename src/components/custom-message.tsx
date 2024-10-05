@@ -1,6 +1,6 @@
-import React from "react";
 import clsx from "clsx";
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
+import React from "react";
 
 // Defining type of the message
 type MessageType = "error" | "success" | "info" | "warning";

@@ -1,10 +1,12 @@
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
+import { navbarLinks } from "@/constants";
+import { getSession } from "@/utils/session";
+
 import MobileNav from "./MobileNav";
 import NavbarButtons from "../navbar-buttons";
-import { getSession } from "@/utils/session";
-import { navbarLinks } from "@/constants";
 import { Button } from "../ui/button";
 
 const Navbar = async () => {

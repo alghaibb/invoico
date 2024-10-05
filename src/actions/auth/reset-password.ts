@@ -1,11 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { getUserByResetPasswordToken } from "@/utils/user/getUser";
-import { deleteResetPasswordToken } from "@/utils/token";
-import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
+
+import prisma from "@/lib/prisma";
+import { actionClient } from "@/lib/safe-action";
+import { deleteResetPasswordToken } from "@/utils/token";
+import { getUserByResetPasswordToken } from "@/utils/user/getUser";
 import { ResetPasswordSchema } from "@/validations/auth";
 
 export const resetPassword = actionClient

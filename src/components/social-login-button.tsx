@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
+
 import { facebookLogin, googleLogin } from "@/actions/auth/social-login";
+
 import { LoadingDots } from "./loading";
+import { Button } from "./ui/button";
 
 interface SocialLoginButtonProps {
   provider: "google" | "facebook";

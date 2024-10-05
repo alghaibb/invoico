@@ -1,5 +1,7 @@
-import prisma from "@/lib/prisma";
 import { startOfMonth } from "date-fns";
+
+import prisma from "@/lib/prisma";
+
 import { getUserByIdWithPlan } from "../user/getUser";
 
 export async function limitUserInvoices(userId: string) {

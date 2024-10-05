@@ -1,14 +1,15 @@
 "use server"
 
-import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { getUserByEmail } from "@/utils/user/getUser";
-import { CreateAccountSchema } from "@/validations/auth";
-import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
+
 import { rateLimitByIp } from "@/lib/limiter";
+import prisma from "@/lib/prisma";
+import { actionClient } from "@/lib/safe-action";
 import { sendVerificationEmail } from "@/utils/sendEmails";
 import { generateVerificationCode } from "@/utils/token";
+import { getUserByEmail } from "@/utils/user/getUser";
+import { CreateAccountSchema } from "@/validations/auth";
 
 export const createAccount = actionClient
   .schema(CreateAccountSchema, {
