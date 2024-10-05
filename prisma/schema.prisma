@@ -20,6 +20,12 @@ enum InvoiceStatus {
   OVERDUE
 }
 
+enum PlanType {
+  FREE
+  PROFESSIONAL
+  BUSINESS
+}
+
 model User {
   id            String    @id @default(cuid())
   firstName     String?
@@ -147,7 +153,7 @@ model GuestUsage {
 
 model Plan {
   id           String   @id @default(cuid())
-  name         String
+  type         PlanType @unique
   invoiceLimit Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

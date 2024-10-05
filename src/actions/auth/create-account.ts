@@ -49,6 +49,21 @@ export const createAccount = actionClient
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Check for the FREE plan, and if it doesn't exist, create it dynamically
+    let freePlan = await prisma.plan.findFirst({
+      where: { type: "FREE" }
+    });
+
+    // If the FREE plan doesn't exist, create it
+    if (!freePlan) {
+      freePlan = await prisma.plan.create({
+        data: {
+          type: "FREE",
+          invoiceLimit: 10,  // Adjust as needed
+        }
+      });
+    }
+    
     // Create user
     await prisma.user.create({
       data: {
@@ -56,6 +71,7 @@ export const createAccount = actionClient
         lastName,
         email,
         password: hashedPassword,
+        planId: freePlan.id,
       }
     });
 

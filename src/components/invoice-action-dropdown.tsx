@@ -13,11 +13,9 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { useLoadingStore } from "@/stores/loadingStore";
 
 import ConfirmDeleteDialog from "./confirm-delete-dialog";
 
-// Reusable component for the three-dot action menu
 const InvoiceActionsDropdown = ({
   invoiceId,
   initialStatus,
@@ -30,9 +28,10 @@ const InvoiceActionsDropdown = ({
   const [status, setStatus] = useState<InvoiceStatus>(
     initialStatus as InvoiceStatus
   );
+  const [isLoading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const setLoading = useLoadingStore((state) => state.setLoading);
 
   const handleViewInvoice = () => {
     router.push(`/invoices/preview-invoice/${invoiceId}`);
@@ -46,6 +45,7 @@ const InvoiceActionsDropdown = ({
   const handleDeleteInvoice = async () => {
     setIsDeleting(true);
     setLoading(true);
+    setIsOpen(false);
 
     try {
       const res = await fetch(`/api/invoice/delete-invoice/${invoiceId}`, {
@@ -127,7 +127,7 @@ const InvoiceActionsDropdown = ({
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <button
           className="flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none"
