@@ -85,6 +85,12 @@ export const createInvoice = actionClient
           },
         });
 
+        // Increment the invoice count for the user
+        await prisma.userMonthlyUsage.update({
+          where: { id: userId },
+          data: { invoices: { increment: 1 } },
+        });
+
         return { success: "Invoice successfully created", invoice };
       } else {
         // If the user is a guest, enforce guest invoice limits
@@ -153,6 +159,13 @@ export const createInvoice = actionClient
             },
             guestId: guestUsage.id, // Link the invoice to the GuestUsage record
           },
+        });
+
+        // Increment the invoice count after creation
+        await prisma.guestUsage.upsert({
+          where: { ipAddress: guestIp },
+          update: { invoices: { increment: 1 } },
+          create: { ipAddress: guestIp, invoices: 1 },
         });
 
         return { success: "Invoice successfully created", invoice };

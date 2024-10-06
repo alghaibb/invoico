@@ -185,10 +185,11 @@ model Invoice {
   taxRate         Float?
   taxAmount       Float?
 
-  userId  String?
-  guestId String?
-  user    User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guest   GuestUsage? @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  userId    String?
+  guestId   String?
+  ipAddress String?
+  user      User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guest     GuestUsage? @relation(fields: [guestId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

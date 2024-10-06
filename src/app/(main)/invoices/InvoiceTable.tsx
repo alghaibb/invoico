@@ -61,6 +61,9 @@ const InvoiceStatusBadge = ({ status }: { status: string }) => {
 
 export default function InvoiceTable() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [remainingInvoices, setRemainingInvoices] = useState<number | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
   const { status, sortBy, sortOrder } = useFilter();
@@ -68,8 +71,9 @@ export default function InvoiceTable() {
   useEffect(() => {
     const loadInvoices = async () => {
       try {
-        const data = await fetchInvoices();
-        setInvoices(data.invoices);
+        const { invoices, remainingInvoices } = await fetchInvoices();
+        setInvoices(invoices);
+        setRemainingInvoices(remainingInvoices);
       } catch (error) {
         console.error("Error loading invoices:", error);
       } finally {
@@ -99,15 +103,19 @@ export default function InvoiceTable() {
   });
 
   if (loading) {
-    return (
-      <div className="bg-none">
-        <LoadingDots />
-      </div>
-    );
+    return <LoadingDots />;
   }
 
   return (
     <div className="container p-6 mx-auto">
+      {/* Remaining invoices message */}
+      {remainingInvoices !== null && (
+        <Message
+          type="info"
+          message={`You have ${remainingInvoices} invoices left to create.`}
+        />
+      )}
+
       {/* Button and heading wrapper */}
       <div className="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row md:gap-0">
         <h1 className="text-3xl font-semibold">Your Invoices</h1>

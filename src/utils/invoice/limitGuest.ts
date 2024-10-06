@@ -1,7 +1,7 @@
 import { getIp } from "@/lib/get-ip";
 import prisma from "@/lib/prisma";
 
-const MAX_GUEST_INVOICES = 5;
+const MAX_GUEST_INVOICES = parseInt(process.env.MAX_GUEST_INVOICES || "5", 10);
 
 export async function limitGuestInvoices() {
   // Get the IP address of the user
@@ -11,33 +11,22 @@ export async function limitGuestInvoices() {
     throw new Error("IP address not found");
   }
 
-  // Find guest usage entry by IP address
-  let guestUsage = await prisma.guestUsage.findUnique({
+  // Find guest usage by IP address
+  const guestUsage = await prisma.guestUsage.findUnique({
     where: { ipAddress: ip },
   });
 
-  // If no guest usage record exists, create one
-  if (!guestUsage) {
-    guestUsage = await prisma.guestUsage.create({
-      data: {
-        ipAddress: ip,
-        invoices: 0,
-      },
-    });
-  }
+  // If no guest usage record exists, set remainingInvoices to MAX_GUEST_INVOICES
+  const remainingInvoices = guestUsage
+    ? MAX_GUEST_INVOICES - guestUsage.invoices
+    : MAX_GUEST_INVOICES;
 
   // Check if the guest has exceeded the invoice limit
-  if (guestUsage.invoices >= MAX_GUEST_INVOICES) {
+  if (remainingInvoices <= 0) {
     throw new Error(
       "You have reached the maximum number of invoices allowed. Please register to create more invoices."
     );
   }
 
-  // If not exceeded, allow the creation of another invoice and increment the count
-  await prisma.guestUsage.update({
-    where: { id: guestUsage.id },
-    data: { invoices: { increment: 1 } },
-  });
-
-  return true;
+  return { success: true, remainingInvoices };
 }

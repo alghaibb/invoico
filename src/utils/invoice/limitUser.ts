@@ -14,35 +14,27 @@ export async function limitUserInvoices(userId: string) {
     throw new Error("User not found");
   }
 
-  // Check the invoice limit based on the users plan
-  const invoiceLimit = user.Plan ? user.Plan.invoiceLimit : 10; // Default to 10 invoices
+  // Check the invoice limit based on the user's plan, default to 10 invoices if plan is missing
+  const invoiceLimit = user.Plan?.invoiceLimit || 10;
 
-  // Find or create the users monthy usage record for the current month
+  // Find the user's monthly usage record for the current month
   let userUsage = await prisma.userMonthlyUsage.findUnique({
     where: { userId },
   });
 
-  // If no record exists or the record is for a previous month, reset for the current month
+  // If no record exists or the record is for a previous month, return a reset count
   if (!userUsage || userUsage.month < currentMonthStart) {
-    userUsage = await prisma.userMonthlyUsage.upsert({
-      where: { userId },
-      update: { month: currentMonthStart, invoices: 1 }, // Reset invoice count for the new month
-      create: { userId, month: currentMonthStart, invoices: 1 },
-    });
-  } else {
-    // If the user has already created the maximum number of invoices this month
-    if (userUsage.invoices >= invoiceLimit) {
-      throw new Error(
-        `You have reached the maximum number of invoices for this month according to your plan. Please wait until next month or upgrade your plan to create more invoices.`
-      );
-    }
-
-    // If under the limit, increment the invoice count
-    await prisma.userMonthlyUsage.update({
-      where: { userId },
-      data: { invoices: { increment: 1 } },
-    });
+    return { success: true, remainingInvoices: invoiceLimit };
   }
 
-  return true; // User is allowed to create an invoice
+  // Calculate remaining invoices
+  const remainingInvoices = invoiceLimit - userUsage.invoices;
+
+  if (remainingInvoices <= 0) {
+    throw new Error(
+      `You have reached your monthly invoice limit of ${invoiceLimit}. You can create more invoices next month or upgrade your plan for more.`
+    );
+  }
+
+  return { success: true, remainingInvoices };
 }
