@@ -7,7 +7,6 @@ import prisma from "@/lib/prisma";
 import { limitGuestInvoices, limitUserInvoices } from "@/utils/invoice";
 import { getSession } from "@/utils/session";
 
-
 export async function GET(request: NextRequest) {
   try {
     // Get session and user ID
@@ -15,37 +14,51 @@ export async function GET(request: NextRequest) {
     const userId = session?.user?.id;
 
     if (userId) {
-      // If authenticated, fetch user invoices
-      const userInvoices = await prisma.invoice.findMany({
-        where: { userId },
-        include: { InvoiceItem: true },
+      // Fetch the user with their plan details
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          Plan: true, // Ensure the full Plan object is included, not just planId
+          Invoice: {
+            include: { InvoiceItem: true }, // Include invoice items
+          },
+        },
       });
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "User not found." },
+          { status: 404 }
+        );
+      }
 
       // Check remaining invoices for the user
       const { remainingInvoices } = await limitUserInvoices(userId);
 
       return NextResponse.json(
-        { invoices: userInvoices, remainingInvoices },
+        {
+          invoices: user.Invoice,
+          remainingInvoices,
+          plan: user.Plan, 
+        },
         { status: 200 }
       );
     } else {
-      // For guest users, track by IP address
+      // Handle guest logic
       const guestIp = getIp();
       if (!guestIp) {
         return NextResponse.json(
-          { error: 'Unable to retrieve guest IP' },
+          { error: "Unable to retrieve guest IP" },
           { status: 400 }
         );
       }
 
-      // Fetch guest invoices by IP address and include invoice items
+      // Fetch guest invoices by IP address
       const guestUsage = await prisma.guestUsage.findUnique({
         where: { ipAddress: guestIp },
         include: {
           Invoice: {
-            include: {
-              InvoiceItem: true, // Include the invoice items for the guest
-            },
+            include: { InvoiceItem: true }, // Include the invoice items for the guest
           },
         },
       });
@@ -59,9 +72,9 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Error fetching invoices:', error);
+    console.error("Error fetching invoices:", error);
     return NextResponse.json(
-      { error: 'An error occurred while fetching invoices.' },
+      { error: "An error occurred while fetching invoices." },
       { status: 500 }
     );
   }

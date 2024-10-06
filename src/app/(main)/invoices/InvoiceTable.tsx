@@ -8,6 +8,7 @@ import { Message } from "@/components/custom-message";
 import InvoiceActionsDropdown from "@/components/invoice-action-dropdown";
 import { InvoiceFilters } from "@/components/invoice-filters";
 import { LoadingDots } from "@/components/loading";
+import { RemainingInvoicesMessage } from "@/components/remaining-invoices-message";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -40,6 +41,17 @@ type Invoice = {
   InvoiceItem: InvoiceItem[];
 };
 
+type PlanType = {
+  type: string;
+  invoiceLimit: number;
+};
+
+type ApiResponse = {
+  invoices: Invoice[];
+  remainingInvoices: number | null;
+  plan?: PlanType;
+};
+
 // Fetch invoices from API
 const fetchInvoices = async () => {
   const res = await fetch("/api/invoice/get-invoices");
@@ -65,15 +77,19 @@ export default function InvoiceTable() {
     null
   );
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
+  const [planType, setPlanType] = useState<string | null>(null);
 
   const { status, sortBy, sortOrder } = useFilter();
 
   useEffect(() => {
     const loadInvoices = async () => {
       try {
-        const { invoices, remainingInvoices } = await fetchInvoices();
+        const { invoices, remainingInvoices, plan } = await fetchInvoices();
         setInvoices(invoices);
         setRemainingInvoices(remainingInvoices);
+        setIsGuest(!plan);
+        setPlanType(plan?.type || null);
       } catch (error) {
         console.error("Error loading invoices:", error);
       } finally {
@@ -110,9 +126,9 @@ export default function InvoiceTable() {
     <div className="container p-6 mx-auto">
       {/* Remaining invoices message */}
       {remainingInvoices !== null && (
-        <Message
-          type="info"
-          message={`You have ${remainingInvoices} invoices left to create.`}
+        <RemainingInvoicesMessage
+          remainingInvoices={remainingInvoices}
+          isGuest={isGuest}
         />
       )}
 

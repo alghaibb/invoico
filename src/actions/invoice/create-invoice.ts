@@ -49,7 +49,7 @@ export const createInvoice = actionClient
         await limitUserInvoices(userId);
 
         // Generate an invoice number if not provided
-        generatedInvoiceNo = invoiceNo || `USER-${await generateInvoiceNumberForUser(userId)}`;
+        generatedInvoiceNo = invoiceNo || await generateInvoiceNumberForUser(userId);
 
         // Create the invoice for a registered user
         const invoice = await prisma.invoice.create({
@@ -86,9 +86,14 @@ export const createInvoice = actionClient
         });
 
         // Increment the invoice count for the user
-        await prisma.userMonthlyUsage.update({
+        await prisma.userMonthlyUsage.upsert({
           where: { id: userId },
-          data: { invoices: { increment: 1 } },
+          update: { invoices: { increment: 1 } },
+          create: {
+            userId,
+            month: new Date(),
+            invoices: 1,
+          }
         });
 
         return { success: "Invoice successfully created", invoice };

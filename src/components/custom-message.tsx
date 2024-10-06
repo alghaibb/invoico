@@ -22,7 +22,12 @@ export const Message: React.FC<MessageProps> = ({ type, message }) => {
   const iconSize = 20;
 
   return (
-    <div className={clsx(messageStyles.base, messageStyles[type])}>
+    <div
+      className={`${clsx(
+        messageStyles.base,
+        messageStyles[type]
+      )} flex flex-col md:flex-row`}
+    >
       {/* Add icon based on message type */}
       {type === "error" && (
         <AlertCircle size={iconSize} className="text-red-600" />
