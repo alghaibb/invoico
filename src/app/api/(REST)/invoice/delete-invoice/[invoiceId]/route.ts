@@ -1,6 +1,3 @@
-// /app/api/invoices/[invoiceId]/route.ts
-
-import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/lib/prisma";
@@ -46,7 +43,16 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
       where: { id: invoiceId },
     });
 
-    revalidatePath("/invoices");
+    await prisma.userMonthlyUsage.update({
+      where: { userId },
+      data: {
+        invoices: {
+          decrement: 1,
+        }
+      }
+    })
+
+    console.log("Invoice deleted successfully:", invoiceId);
 
     return NextResponse.json({ success: "Invoice successfully deleted" }, { status: 200 });
   } catch (error) {

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
 import { Message } from "@/components/custom-message";
@@ -20,44 +19,9 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import useInvoiceData from "@/hooks/use-invoice-data";
 import { useFilter } from "@/providers/FilterProvider";
 import { formatCurrency, formatDate } from "@/utils/format";
-
-type InvoiceItem = {
-  description: string;
-  quantity: number;
-  price: number;
-  total: number;
-};
-
-type Invoice = {
-  id: string;
-  invoiceNo: string;
-  toName: string;
-  toEmail: string;
-  dueDate: string;
-  totalAmount: number;
-  status: "PENDING" | "PAID" | "OVERDUE";
-  InvoiceItem: InvoiceItem[];
-};
-
-type PlanType = {
-  type: string;
-  invoiceLimit: number;
-};
-
-type ApiResponse = {
-  invoices: Invoice[];
-  remainingInvoices: number | null;
-  plan?: PlanType;
-};
-
-// Fetch invoices from API
-const fetchInvoices = async () => {
-  const res = await fetch("/api/invoice/get-invoices");
-  if (!res.ok) throw new Error("Failed to fetch invoices");
-  return res.json();
-};
 
 // Badge component for displaying invoice status
 const InvoiceStatusBadge = ({ status }: { status: string }) => {
@@ -72,47 +36,31 @@ const InvoiceStatusBadge = ({ status }: { status: string }) => {
 };
 
 export default function InvoiceTable() {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [remainingInvoices, setRemainingInvoices] = useState<number | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
-  const [isGuest, setIsGuest] = useState(false);
-  const [planType, setPlanType] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const {
+    invoices,
+    remainingInvoices,
+    isGuest,
+    errorMessage,
+    loading,
+    setInvoiceData,
+  } = useInvoiceData();
 
   const { status, sortBy, sortOrder } = useFilter();
 
-  useEffect(() => {
-    const loadInvoices = async () => {
-      try {
-        const { invoices, remainingInvoices, plan } = await fetchInvoices();
-        setInvoices(invoices);
-        setRemainingInvoices(remainingInvoices);
-        setIsGuest(!plan);
-        setPlanType(plan?.type || null);
-      } catch (error) {
-        console.error("Error loading invoices:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadInvoices();
-  }, []);
-
   const handleCreateInvoiceClick = () => {
-    setRemainingInvoices(null);
+    setInvoiceData((prevState) => ({ ...prevState, remainingInvoices: null }));
 
     if (remainingInvoices === 0) {
       if (isGuest) {
-        setErrorMessage(
-          `You've hit your limit. Please create an account to create more invoices.`
-        );
+        setInvoiceData((prevState) => ({
+          ...prevState,
+          errorMessage: `You've hit your limit. Please create an account to create more invoices.`,
+        }));
       } else {
-        setErrorMessage(
-          `You've hit your limit. Please upgrade your plan to create more invoices.`
-        );
+        setInvoiceData((prevState) => ({
+          ...prevState,
+          errorMessage: `You've hit your limit. Please upgrade your plan to create more invoices.`,
+        }));
       }
     }
   };
@@ -160,7 +108,7 @@ export default function InvoiceTable() {
           asChild
           className="flex items-center"
           onClick={handleCreateInvoiceClick}
-          disabled={remainingInvoices === 0} // Disable if no invoices left
+          disabled={remainingInvoices === 0}
         >
           <Link
             href={

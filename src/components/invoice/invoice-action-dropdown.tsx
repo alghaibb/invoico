@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import useInvoiceData from "@/hooks/use-invoice-data";
 import { useToast } from "@/hooks/use-toast";
 
 import ConfirmDeleteDialog from "../confirm-delete-dialog";
