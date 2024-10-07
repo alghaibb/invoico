@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          Plan: true, // Ensure the full Plan object is included, not just planId
+          Plan: true,
           Invoice: {
-            include: { InvoiceItem: true }, // Include invoice items
+            include: { InvoiceItem: true },
           },
         },
       });
@@ -33,13 +33,25 @@ export async function GET(request: NextRequest) {
       }
 
       // Check remaining invoices for the user
-      const { remainingInvoices } = await limitUserInvoices(userId);
+      const { success, remainingInvoices, error } = await limitUserInvoices(userId);
+
+      // If the user has reached their invoice limit
+      if (!success) {
+        return NextResponse.json(
+          {
+            invoices: user.Invoice,
+            remainingInvoices,
+            message: error,
+          },
+          { status: 200 }
+        );
+      }
 
       return NextResponse.json(
         {
           invoices: user.Invoice,
           remainingInvoices,
-          plan: user.Plan, 
+          plan: user.Plan,
         },
         { status: 200 }
       );
@@ -58,13 +70,25 @@ export async function GET(request: NextRequest) {
         where: { ipAddress: guestIp },
         include: {
           Invoice: {
-            include: { InvoiceItem: true }, // Include the invoice items for the guest
+            include: { InvoiceItem: true },
           },
         },
       });
 
       // Check remaining invoices for the guest
-      const { remainingInvoices } = await limitGuestInvoices();
+      const { success, remainingInvoices, error } = await limitGuestInvoices();
+
+      // If the guest has no remaining invoices
+      if (!success) {
+        return NextResponse.json(
+          {
+            invoices: guestUsage?.Invoice || [],
+            remainingInvoices,
+            message: error,
+          },
+          { status: 200 }
+        );
+      }
 
       return NextResponse.json(
         { invoices: guestUsage?.Invoice || [], remainingInvoices },

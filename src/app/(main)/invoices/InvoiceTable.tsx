@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
 import { Message } from "@/components/custom-message";
-import InvoiceActionsDropdown from "@/components/invoice-action-dropdown";
-import { InvoiceFilters } from "@/components/invoice-filters";
+import InvoiceActionsDropdown from "@/components/invoice/invoice-action-dropdown";
+import { InvoiceFilters } from "@/components/invoice/invoice-filters";
+import { RemainingInvoicesMessage } from "@/components/invoice/remaining-invoices-message";
 import { LoadingDots } from "@/components/loading";
-import { RemainingInvoicesMessage } from "@/components/remaining-invoices-message";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -79,6 +79,7 @@ export default function InvoiceTable() {
   const [loading, setLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
   const [planType, setPlanType] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { status, sortBy, sortOrder } = useFilter();
 
@@ -99,6 +100,22 @@ export default function InvoiceTable() {
 
     loadInvoices();
   }, []);
+
+  const handleCreateInvoiceClick = () => {
+    setRemainingInvoices(null);
+
+    if (remainingInvoices === 0) {
+      if (isGuest) {
+        setErrorMessage(
+          `You've hit your limit. Please create an account to create more invoices.`
+        );
+      } else {
+        setErrorMessage(
+          `You've hit your limit. Please upgrade your plan to create more invoices.`
+        );
+      }
+    }
+  };
 
   // Apply filtering and sorting based on status, sortBy, and sortOrder
   const filteredInvoices = invoices.filter((invoice) =>
@@ -132,11 +149,26 @@ export default function InvoiceTable() {
         />
       )}
 
+      {/* Error message if clicked and no remaining invoices */}
+      {errorMessage && <Message type="error" message={errorMessage} />}
+
       {/* Button and heading wrapper */}
       <div className="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row md:gap-0">
         <h1 className="text-3xl font-semibold">Your Invoices</h1>
-        <Button variant="ghost" asChild className="flex items-center">
-          <Link href="/invoices/new-invoice" className="flex items-center">
+        <Button
+          variant="ghost"
+          asChild
+          className="flex items-center"
+          onClick={handleCreateInvoiceClick}
+          disabled={remainingInvoices === 0} // Disable if no invoices left
+        >
+          <Link
+            href={
+              remainingInvoices && remainingInvoices > 0
+                ? "/invoices/new-invoice"
+                : "#"
+            }
+          >
             Create New Invoice <CiCirclePlus className="w-5 h-5 ml-2" />
           </Link>
         </Button>

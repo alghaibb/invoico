@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 
-import ConfirmDeleteDialog from "./confirm-delete-dialog";
+import ConfirmDeleteDialog from "../confirm-delete-dialog";
 
 const InvoiceActionsDropdown = ({
   invoiceId,

@@ -10,9 +10,7 @@ import { Button } from "@/components/ui/button";
 import { navbarLinks } from "@/constants";
 import styles from "@/styles/mobileNav.module.css";
 
-
 import { LogoutButton } from "../logout-button";
-
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,17 +58,17 @@ const MobileNav = () => {
           {/* Login/User Button */}
           {session ? (
             <LogoutButton className="w-full">
-              <Button className="w-full">Logout</Button>
+              <Button className="w-full">Log Out</Button>
             </LogoutButton>
           ) : (
             <div className="flex flex-col w-full space-y-1" onClick={closeMenu}>
               <Link href="/login">
                 <Button variant="outline" className="w-full">
-                  Login
+                  Log In
                 </Button>
               </Link>
               <Link href="/create-account">
-                <Button className="w-full">Create Account</Button>
+                <Button className="w-full">Create An Account</Button>
               </Link>
             </div>
           )}

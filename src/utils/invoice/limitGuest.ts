@@ -23,9 +23,11 @@ export async function limitGuestInvoices() {
 
   // Check if the guest has exceeded the invoice limit
   if (remainingInvoices <= 0) {
-    throw new Error(
-      "You have reached the maximum number of invoices allowed. Please register to create more invoices."
-    );
+    return {
+      succes: false,
+      error: "You have reached the maximum number of invoices allowed. Please create an account to create more invoices.",
+      remainingInvoices: 0,
+    }
   }
 
   return { success: true, remainingInvoices };

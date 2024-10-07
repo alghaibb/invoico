@@ -13,3 +13,9 @@ export const navbarLinks = [
     href: "/contact-us",
   },
 ]
+
+export const pagesWithoutFooter = [
+  "/invoices/new-invoice",
+  "/invoices",
+  "/invoices/preview-invoice",
+]

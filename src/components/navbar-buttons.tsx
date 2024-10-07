@@ -36,7 +36,7 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
                 </span>
               </TooltipTrigger>
               <TooltipContent side="top" align="end">
-                Logout
+                Log Out
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -45,11 +45,11 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
         <>
           <Link href="/login">
             <Button variant="ghost" className="text-secondary">
-              Login
+              Log In
             </Button>
           </Link>
           <Link href="/create-account">
-            <Button variant="navbar">Create Account</Button>
+            <Button variant="navbar">Create An Account</Button>
           </Link>
         </>
       )}

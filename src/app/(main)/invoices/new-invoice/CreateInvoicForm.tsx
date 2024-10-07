@@ -180,7 +180,10 @@ const CreateInvoiceForm: React.FC = () => {
   return (
     <Form {...form}>
       {error && <Message type="error" message={error} />}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-10 space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mt-10 space-y-8 hide-footer"
+      >
         {/* Invoice Header */}
         <div className="flex flex-col items-center justify-between mb-6 md:flex-row">
           <FormField

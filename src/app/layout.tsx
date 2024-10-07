@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 import "@/styles/globals.css";
 import { FilterProvider } from "@/providers/FilterProvider";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default async function RootLayout({
             <main className="flex-grow">
               <Navbar />
               {children}
+              <Footer />
             </main>
             <Toaster />
           </body>

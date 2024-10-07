@@ -11,7 +11,7 @@ export async function limitUserInvoices(userId: string) {
   const user = await getUserByIdWithPlan(userId);
 
   if (!user) {
-    throw new Error("User not found");
+    return { success: false, error: "User not found", remainingInvoices: 0 };
   }
 
   // Check the invoice limit based on the user's plan, default to 10 invoices if plan is missing
@@ -22,7 +22,7 @@ export async function limitUserInvoices(userId: string) {
     where: { userId },
   });
 
-  // If no record exists or the record is for a previous month, return a reset count
+  // If no record exists or the record is for a previous month, return the full limit for the current month
   if (!userUsage || userUsage.month < currentMonthStart) {
     return { success: true, remainingInvoices: invoiceLimit };
   }
@@ -30,10 +30,13 @@ export async function limitUserInvoices(userId: string) {
   // Calculate remaining invoices
   const remainingInvoices = invoiceLimit - userUsage.invoices;
 
+  // If no remaining invoices, return with an error message
   if (remainingInvoices <= 0) {
-    throw new Error(
-      `You have reached your monthly invoice limit of ${invoiceLimit}. You can create more invoices next month or upgrade your plan for more.`
-    );
+    return {
+      success: false,
+      error: `You have reached your monthly invoice limit of ${invoiceLimit}. You can create more invoices next month or upgrade your plan for more.`,
+      remainingInvoices: 0,
+    };
   }
 
   return { success: true, remainingInvoices };

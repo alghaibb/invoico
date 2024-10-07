@@ -1,5 +1,11 @@
-import Hero from "@/components/hero/Hero";
+import FaqSection from "@/components/faq";
+import Hero from "@/components/hero";
 
 export default function Home() {
-  return <Hero />;
+  return (
+    <div>
+      <Hero />
+      <FaqSection />
+    </div>
+  );
 }
