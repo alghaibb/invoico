@@ -1,5 +1,4 @@
-"use client";
-
+import React, { forwardRef } from "react";
 import { FaTrash } from "react-icons/fa6";
 
 import {
@@ -22,36 +21,47 @@ interface ConfirmDeleteDialogProps {
   triggerElement?: React.ReactNode;
 }
 
-const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
-  onConfirm,
-  title = "Confirm Deletion",
-  description = "Are you sure you want to delete this item? This action cannot be undone.",
-  triggerElement,
-}) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        {triggerElement ? (
-          triggerElement
-        ) : (
-          <Button variant="ghost">
-            <FaTrash className="mr-1" />
-          </Button>
-        )}
-      </AlertDialogTrigger>
+const ConfirmDeleteDialog = forwardRef<
+  HTMLButtonElement,
+  ConfirmDeleteDialogProps
+>(
+  (
+    {
+      onConfirm,
+      title = "Confirm Deletion",
+      description = "Are you sure you want to delete this item? This action cannot be undone.",
+      triggerElement,
+    },
+    ref
+  ) => {
+    return (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          {triggerElement ? (
+            // Ensure the triggerElement forwards the ref if needed
+            React.cloneElement(triggerElement as React.ReactElement, { ref })
+          ) : (
+            <Button variant="ghost" ref={ref}>
+              <FaTrash className="mr-1" />
+            </Button>
+          )}
+        </AlertDialogTrigger>
 
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  }
+);
+
+ConfirmDeleteDialog.displayName = "ConfirmDeleteDialog";
 
 export default ConfirmDeleteDialog;
