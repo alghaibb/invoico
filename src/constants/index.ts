@@ -1,4 +1,4 @@
-// Navbar // 
+// Navbar links 
 export const navbarLinks = [
   {
     label: "Features",
@@ -14,8 +14,7 @@ export const navbarLinks = [
   },
 ]
 
+// Routes to hide the footer 
 export const pagesWithoutFooter = [
-  "/invoices/new-invoice",
-  "/invoices",
   "/invoices/preview-invoice",
 ]

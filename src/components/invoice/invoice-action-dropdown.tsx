@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import useInvoiceData from "@/hooks/use-invoice-data";
 import { useToast } from "@/hooks/use-toast";
 
 import ConfirmDeleteDialog from "../confirm-delete-dialog";
@@ -24,11 +23,9 @@ const InvoiceActionsDropdown = ({
   invoiceId: string;
   initialStatus: InvoiceStatus;
 }) => {
+  const [currentStatus, setCurrentStatus] =
+    useState<InvoiceStatus>(initialStatus);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [status, setStatus] = useState<InvoiceStatus>(
-    initialStatus as InvoiceStatus
-  );
   const [isLoading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
@@ -39,7 +36,6 @@ const InvoiceActionsDropdown = ({
   };
 
   const handleEmailInvoice = () => {
-    // Logic to send invoice via email
     console.log(`Sending email for invoice ${invoiceId}`);
   };
 
@@ -61,8 +57,7 @@ const InvoiceActionsDropdown = ({
           description: result.success,
         });
 
-        router.push("invoices");
-        window.location.href = "/invoices";
+        router.refresh();
       } else {
         toast({
           title: "Error",
@@ -83,7 +78,7 @@ const InvoiceActionsDropdown = ({
   };
 
   const handleUpdateStatus = async (newStatus: InvoiceStatus) => {
-    setIsUpdating(true);
+    setLoading(true);
 
     try {
       const res = await fetch(
@@ -100,14 +95,16 @@ const InvoiceActionsDropdown = ({
       const result = await res.json();
 
       if (res.ok) {
-        setStatus(newStatus);
         toast({
-          title: "Success",
+          title: "Status Updated",
           description: result.success,
         });
+        setCurrentStatus(newStatus);
+
         setTimeout(() => {
-          router.push("/invoices");
-          window.location.href = "/invoices";
+          {
+            window.location.href = "/invoices";
+          }
         }, 2000);
       } else {
         toast({
@@ -122,9 +119,9 @@ const InvoiceActionsDropdown = ({
         description: "An error occurred while updating the invoice status.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-
-    setIsUpdating(false);
   };
 
   return (
@@ -132,9 +129,9 @@ const InvoiceActionsDropdown = ({
       <DropdownMenuTrigger asChild>
         <button
           className="flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none"
-          disabled={isDeleting || isUpdating}
+          disabled={isDeleting}
         >
-          {isDeleting || isUpdating ? (
+          {isDeleting ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <MoreHorizontal className="w-5 h-5" />
@@ -159,10 +156,10 @@ const InvoiceActionsDropdown = ({
           onSelect={() => handleUpdateStatus("PAID")}
           className="flex items-center gap-2 px-4 py-2 text-sm cursor-pointer"
         >
-          {status === "PAID" ? (
-            <CheckCircle className="w-4 h-4 text-green-500" />
+          {currentStatus === "PAID" ? (
+            <CheckCircle className="w-5 h-5 text-green-500" />
           ) : (
-            <Circle className="w-4 h-4 text-gray-400" />
+            <Circle className="w-5 h-5 text-gray-500" />
           )}
           Mark as Paid
         </DropdownMenuItem>
