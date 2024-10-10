@@ -9,6 +9,14 @@ import { getSession } from "@/utils/session";
 
 export async function GET(request: NextRequest) {
   try {
+    // Get query parameters for pagination
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
+
+    // Calcuate the offset for prisma 
+    const skip = (page - 1) * pageSize;
+
     // Get session and user ID
     const session = await getSession();
     const userId = session?.user?.id;
@@ -20,6 +28,8 @@ export async function GET(request: NextRequest) {
         include: {
           Plan: true,
           Invoice: {
+            skip,
+            take: pageSize,
             include: { InvoiceItem: true },
           },
         },
@@ -32,6 +42,11 @@ export async function GET(request: NextRequest) {
         );
       }
 
+      // Count total invoices for pagination calculation
+      const totalInvoices = await prisma.invoice.count({
+        where: { userId: user.id },
+      });
+
       // Check remaining invoices for the user
       const { success, remainingInvoices, error } = await limitUserInvoices(userId);
 
@@ -41,6 +56,7 @@ export async function GET(request: NextRequest) {
           {
             invoices: user.Invoice,
             remainingInvoices,
+            totalInvoices,
             message: error,
           },
           { status: 200 }
@@ -51,6 +67,7 @@ export async function GET(request: NextRequest) {
         {
           invoices: user.Invoice,
           remainingInvoices,
+          totalInvoices,
           plan: user.Plan,
         },
         { status: 200 }
@@ -70,10 +87,18 @@ export async function GET(request: NextRequest) {
         where: { ipAddress: guestIp },
         include: {
           Invoice: {
+            skip,
+            take: pageSize,
             include: { InvoiceItem: true },
           },
         },
       });
+
+      // Count total guest invoices for pagination
+      const totalGuestInvoices = await prisma.invoice.count({
+        where: { guestId: guestUsage?.id },
+      });
+
 
       // Check remaining invoices for the guest
       const { success, remainingInvoices, error } = await limitGuestInvoices();
@@ -84,6 +109,7 @@ export async function GET(request: NextRequest) {
           {
             invoices: guestUsage?.Invoice || [],
             remainingInvoices,
+            totalInvoices: totalGuestInvoices,
             message: error,
           },
           { status: 200 }
@@ -91,7 +117,7 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { invoices: guestUsage?.Invoice || [], remainingInvoices },
+        { invoices: guestUsage?.Invoice || [], remainingInvoices, totalInvoices: totalGuestInvoices },
         { status: 200 }
       );
     }

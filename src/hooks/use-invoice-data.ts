@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 type InvoiceData = {
   invoices: Invoice[];
   remainingInvoices: number | null;
+  totalInvoices: number | null;
   planType: string | null;
   isGuest: boolean;
   errorMessage: string | null;
@@ -13,19 +14,27 @@ const useInvoiceData = () => {
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     invoices: [],
     remainingInvoices: null,
+    totalInvoices: 0,
     planType: null,
     isGuest: false,
     errorMessage: null,
     loading: true,
   });
 
-  const fetchInvoices = async () => {
+  const [page, setPage] = useState(1);
+  const pageSize = 10; // Set to 1 to test with 1 invoice per page
+
+  const fetchInvoices = async (page: number = 1, pageSize: number = 10) => { // Set default pageSize to 1
     try {
-      const res = await fetch("/api/invoice/get-invoices");
-      const { invoices, remainingInvoices, plan } = await res.json();
+      setInvoiceData((prevState) => ({ ...prevState, loading: true }));
+
+      const res = await fetch(`/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`);
+      const { invoices, remainingInvoices, totalInvoices, plan } = await res.json();
+
       setInvoiceData({
         invoices,
         remainingInvoices,
+        totalInvoices,
         planType: plan?.type || null,
         isGuest: !plan,
         errorMessage: null,
@@ -41,13 +50,16 @@ const useInvoiceData = () => {
   };
 
   useEffect(() => {
-    fetchInvoices();
-  }, []);
+    fetchInvoices(page, pageSize);
+  }, [page]);
 
   return {
     ...invoiceData,
     setInvoiceData,
-    refetchInvoices: fetchInvoices,
+    refetchInvoices: () => fetchInvoices(page, pageSize),
+    setPage,
+    page,
+    totalPages: Math.ceil(invoiceData.totalInvoices! / pageSize),
   };
 };
 

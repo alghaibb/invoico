@@ -10,6 +10,14 @@ import { RemainingInvoicesMessage } from "@/components/invoice/remaining-invoice
 import { LoadingDots } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -20,6 +28,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import useInvoiceData from "@/hooks/use-invoice-data";
+import { cn } from "@/lib/utils";
 import { useFilter } from "@/providers/FilterProvider";
 import { formatCurrency, formatDate } from "@/utils/format";
 
@@ -39,6 +48,9 @@ export default function InvoiceTable() {
   const {
     invoices,
     remainingInvoices,
+    totalPages,
+    page,
+    setPage,
     isGuest,
     errorMessage,
     loading,
@@ -173,6 +185,54 @@ export default function InvoiceTable() {
           </Table>
         </div>
       )}
+
+      {/* Pagination */}
+      <Pagination className="w-full mt-14">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                if (page === 1)
+                  e.preventDefault(); // Disable if it's the first page
+                else setPage(page - 1);
+              }}
+              className={cn(
+                page === 1 ? "cursor-not-allowed text-gray-400" : ""
+              )} // Style it as disabled
+            />
+          </PaginationItem>
+
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(index + 1);
+                }}
+                isActive={page === index + 1}
+              >
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                if (page === totalPages)
+                  e.preventDefault(); // Disable if it's the last page
+                else setPage(page + 1);
+              }}
+              className={cn(
+                page === totalPages ? "cursor-not-allowed text-gray-400" : ""
+              )}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }
