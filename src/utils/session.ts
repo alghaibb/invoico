@@ -17,9 +17,29 @@ export async function getSession() {
   const session = await prisma.session.findUnique({
     where: { sessionToken: sessionToken.value },
     include: {
-      user: true,
+      user: {
+        include: {
+          Plan: true,
+        }
+      },
     },
   });
 
   return session;
+}
+
+// New function to get user details like the name from the session
+export async function getUserFromSession() {
+  const session = await getSession(); // Use the getSession function to get the session
+
+  if (!session || !session.user) return null;
+
+  const { user } = session;
+
+  return {
+    name: user.firstName + " " + user.lastName,
+    email: user.email,
+    planType: user.Plan?.type,
+    planId: user.Plan?.id
+  };
 }

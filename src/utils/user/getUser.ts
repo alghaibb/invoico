@@ -14,6 +14,13 @@ export const getUserById = async (id: string) => {
   });
 };
 
+// Find user by email, first and last name
+export const getUserByEmailWithNames = async (email: string) => {
+  return await prisma.user.findUnique({
+    where: { email },
+  });
+};
+
 // Find user by id and plan
 export const getUserByIdWithPlan = async (id: string) => {
   return await prisma.user.findUnique({

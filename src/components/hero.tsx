@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center justify-center mt-20">
+    <section className="relative flex items-center justify-center min-h-screen mt-20 md:mt-0">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

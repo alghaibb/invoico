@@ -74,3 +74,10 @@ export const ResetPasswordSchema = z
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });
+
+// Update Password Schema
+export const UpdatePasswordSchema = z.object({
+  currentPassword: z.string(),
+  newPassword: passwordValidation,
+  confirmNewPassword: confirmPasswordValidation,
+});
