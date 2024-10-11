@@ -40,7 +40,6 @@ export const CreateAccountSchema = z
 
 // Verify Email Schema
 export const VerifyEmailSchema = z.object({
-  email: emailValidation,
   otp: z
     .string()
     .length(6, { message: "OTP must be exactly 6 digits" })

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,9 +48,14 @@ const ResetPasswordForm: React.FC = () => {
     },
   });
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const togglePasswordVisibility = useCallback(
+    () => setShowPassword((prev) => !prev),
+    []
+  );
+  const toggleConfirmPasswordVisibility = useCallback(
+    () => setShowConfirmPassword((prev) => !prev),
+    []
+  );
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     setError(null); // Reset error message

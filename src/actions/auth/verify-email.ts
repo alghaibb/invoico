@@ -5,6 +5,7 @@ import { flattenValidationErrors } from "next-safe-action";
 import { rateLimitByIp } from "@/lib/limiter";
 import prisma from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
+import { getSession } from "@/utils/session";
 import { verifyVerificationCode, deleteVerificationCode } from "@/utils/token";
 import { VerifyEmailSchema } from "@/validations/auth";
 
@@ -12,12 +13,11 @@ export const verifyEmail = actionClient
   .schema(VerifyEmailSchema, {
     handleValidationErrorsShape: (ve) => flattenValidationErrors(ve),
   })
-  .action(async ({ parsedInput: { email, otp } }) => {
-
+  .action(async ({ parsedInput: { otp } }) => {
     // Rate limit by IP to 5 requests in a 10-minute window
     try {
-      await rateLimitByIp(email, "verify-email", {
-        key: `verify-email-${email}`, // Keyed by email to prevent abuse
+      await rateLimitByIp(otp, "verify-email", {
+        key: `verify-email-${otp}`, // Keyed by otp to prevent abuse
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window
       });
@@ -28,7 +28,7 @@ export const verifyEmail = actionClient
     }
 
     // Verify the OTP
-    const { user, error } = await verifyVerificationCode(otp, email);
+    const { user, error } = await verifyVerificationCode(otp);
 
     if (error) {
       // Return the specific error (invalid or expired OTP)

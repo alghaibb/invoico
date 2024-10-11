@@ -59,14 +59,14 @@ export const deleteVerificationCode = async (otp: string) => {
 };
 
 // Verify the verification code and ensure it matches the user's email
-export const verifyVerificationCode = async (otp: string, email: string) => {
+export const verifyVerificationCode = async (otp: string) => {
   const verificationOTP = await prisma.verificationOTP.findFirst({
-    where: { otp, user: { email } }, // Ensure the OTP matches the provided email
+    where: { otp }, // Ensure the OTP matches the provided email
     include: { user: true },
   });
 
   if (!verificationOTP) {
-    return { user: null, error: "Invalid OTP or email address" }; // OTP or email mismatch
+    return { user: null, error: "Invalid OTP" }; // OTP 
   }
 
   if (verificationOTP.expiresAt <= new Date()) {

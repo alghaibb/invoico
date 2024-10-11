@@ -20,7 +20,6 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   InputOTP,
   InputOTPSlot,
@@ -40,7 +39,6 @@ const VerifyEmailForm: React.FC = () => {
   const form = useForm<VerifyEmailFormData>({
     resolver: zodResolver(VerifyEmailSchema),
     defaultValues: {
-      email: "", // User manually inputs the email
       otp: "",
     },
   });
@@ -61,7 +59,7 @@ const VerifyEmailForm: React.FC = () => {
 
   return (
     <CardWrapper
-      label="Enter your email and OTP to verify"
+      label="Enter the OTP sent to your email to verify your account"
       title="Verify Your Email"
       backButtonHref=""
       backButtonLabel=""
@@ -71,35 +69,22 @@ const VerifyEmailForm: React.FC = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={isExecuting} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="otp"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col justify-center items-center gap-4">
                 <FormLabel>OTP</FormLabel>
                 <FormControl>
-                  <InputOTP {...field} maxLength={6}>
+                  <InputOTP {...field} maxLength={6} className="space-x-2">
                     <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={0} className="w-10 h-12" />
+                      <InputOTPSlot index={1} className="w-10 h-12" />
+                      <InputOTPSlot index={2} className="w-10 h-12" />
                     </InputOTPGroup>
                     <InputOTPSeparator />
                     <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
+                      <InputOTPSlot index={3} className="w-10 h-12" />
+                      <InputOTPSlot index={4} className="w-10 h-12" />
+                      <InputOTPSlot index={5} className="w-10 h-12" />
                     </InputOTPGroup>
                   </InputOTP>
                 </FormControl>

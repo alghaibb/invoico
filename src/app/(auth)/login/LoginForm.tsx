@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
@@ -44,7 +44,10 @@ const LoginForm: React.FC = () => {
     },
   });
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const togglePasswordVisibility = useCallback(
+    () => setShowPassword((prev) => !prev),
+    []
+  );
 
   const onSubmit = async (data: LoginFormData) => {
     setError(null); // Reset error message

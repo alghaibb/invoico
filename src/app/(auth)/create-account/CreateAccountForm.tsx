@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
@@ -48,14 +48,22 @@ const CreateAccountForm: React.FC = () => {
     },
   });
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const togglePasswordVisibility = useCallback(
+    () => setShowPassword((prev) => !prev),
+    []
+  );
+  const toggleConfirmPasswordVisibility = useCallback(
+    () => setShowConfirmPassword((prev) => !prev),
+    []
+  );
 
-  const onSubmit = async (data: CreateAccountFormData) => {
-    setError(null); // Reset error message
-    execute(data);
-  };
+  const onSubmit = useCallback(
+    async (data: CreateAccountFormData) => {
+      setError(null); // Reset error message
+      execute(data);
+    },
+    [execute]
+  );
 
   // Redirect to verify-email page on successful account creation
   useEffect(() => {
@@ -65,7 +73,7 @@ const CreateAccountForm: React.FC = () => {
     } else if (result?.data?.error) {
       setError(result.data.error); // Set error message if there's any
     }
-  }, [result, form, router]);
+  }, [result, router]);
 
   return (
     <CardWrapper
