@@ -22,8 +22,10 @@ function pruneTrackers() {
 
 setInterval(pruneTrackers, PRUNE_INTERVAL);
 
-export async function rateLimitByIp(email: string, p0: string, {
-  key = "global", limit = 1, window = 10000,
+export async function rateLimitByIp({
+  key = "global",
+  limit = 1,
+  window = 10000,
 }: {
   key?: string;
   limit?: number;

@@ -4,48 +4,56 @@ import bcrypt from "bcrypt";
 import { flattenValidationErrors } from "next-safe-action";
 
 import { signIn } from "@/auth";
-import { rateLimitByIp } from "@/lib/limiter";
+import { getIp } from "@/lib/get-ip";
+import { rateLimitByIp, rateLimitByKey } from "@/lib/limiter"; // You might need a more generic limiter for keys like email
 import { actionClient } from "@/lib/safe-action";
 import { getUserByEmail } from "@/utils/user/getUser";
 import { LoginSchema } from "@/validations/auth";
 
 export const login = actionClient
   .schema(LoginSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { email, password } }) => {
-    // Get the user by email
-    const user = await getUserByEmail(email);
+    const ip = getIp();
 
-    // If user is not found, return an error
-    if (!user || !user.password) {
+    // Apply rate limiting by IP first
+    try {
+      await rateLimitByIp({
+        key: `login-${ip}`,
+        limit: 5,
+        window: 10 * 60 * 1000, // 10 minutes
+      });
+    } catch (error) {
       return {
-        error: "Invalid email or password",
+        error: "Too many requests from your IP. Please try again later.",
       };
     }
 
-    // Apply rate limiting by IP, limiting to 5 requests in a 10-minute window
+    // Try to get the user by email
+    const user = await getUserByEmail(email);
+
+    // Apply email-based rate limiting even if the user exists
     try {
-      await rateLimitByIp(email, "login", {
+      await rateLimitByKey({
         key: `login-${email}`,
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window
       });
     } catch (error) {
       return {
-        error: "Too many requests. Please try again later.",
+        error: "Your account has been temporarily locked due to too many failed login attempts. Please try again later.",
       };
     }
-
-    // Check if user is verified
-    if (!user.emailVerified) {
+    // Check if user exists and is verified
+    if (!user || !user.emailVerified) {
       return {
-        error: "Please verify your email address to log in.",
+        error: user ? "Please verify your email address to log in." : "Invalid email or password",
       };
     }
-
     // Compare the password
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password as string);
 
     // If password does not match, return an error
     if (!match) {
@@ -63,7 +71,6 @@ export const login = actionClient
 
     // Check if login was unsuccessful
     if (loginResponse?.error) {
-      // The `signIn` method could return an error message here
       return {
         error: "Authentication failed. Please check your credentials and try again.",
       };

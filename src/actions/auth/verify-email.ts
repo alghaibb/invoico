@@ -16,7 +16,7 @@ export const verifyEmail = actionClient
   .action(async ({ parsedInput: { otp } }) => {
     // Rate limit by IP to 5 requests in a 10-minute window
     try {
-      await rateLimitByIp(otp, "verify-email", {
+      await rateLimitByIp({
         key: `verify-email-${otp}`, // Keyed by otp to prevent abuse
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window

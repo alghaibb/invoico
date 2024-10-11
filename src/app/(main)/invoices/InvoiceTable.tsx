@@ -63,37 +63,24 @@ export default function InvoiceTable() {
     setInvoiceData((prevState) => ({ ...prevState, remainingInvoices: null }));
 
     if (remainingInvoices === 0) {
-      if (isGuest) {
-        setInvoiceData((prevState) => ({
-          ...prevState,
-          errorMessage: `You've hit your limit. Please create an account to create more invoices.`,
-        }));
-      } else {
-        setInvoiceData((prevState) => ({
-          ...prevState,
-          errorMessage: `You've hit your limit. Please upgrade your plan to create more invoices.`,
-        }));
-      }
+      const message = isGuest
+        ? "You've hit your limit. Please create an account to create more invoices."
+        : "You've hit your limit. Please upgrade your plan to create more invoices.";
+      setInvoiceData((prevState) => ({
+        ...prevState,
+        errorMessage: message,
+      }));
     }
   };
 
   // Apply filtering and sorting based on status, sortBy, and sortOrder
-  const filteredInvoices = invoices.filter((invoice) =>
-    status === "ALL" ? true : invoice.status === status
-  );
-
-  const sortedInvoices = filteredInvoices.sort((a, b) => {
-    const fieldA = sortBy === "date" ? new Date(a.dueDate) : a.totalAmount;
-    const fieldB = sortBy === "date" ? new Date(b.dueDate) : b.totalAmount;
-
-    return sortOrder === "asc"
-      ? fieldA > fieldB
-        ? 1
-        : -1
-      : fieldA < fieldB
-      ? 1
-      : -1;
-  });
+  const filteredAndSortedInvoices = invoices
+    .filter((invoice) => status === "ALL" || invoice.status === status)
+    .sort((a, b) => {
+      const fieldA = sortBy === "date" ? new Date(a.dueDate) : a.totalAmount;
+      const fieldB = sortBy === "date" ? new Date(b.dueDate) : b.totalAmount;
+      return (sortOrder === "asc" ? 1 : -1) * (fieldA > fieldB ? 1 : -1);
+    });
 
   if (loading) {
     return <LoadingDots />;
@@ -101,7 +88,6 @@ export default function InvoiceTable() {
 
   return (
     <div className="container p-6 mx-auto">
-      {/* Remaining invoices message */}
       {remainingInvoices !== null && (
         <RemainingInvoicesMessage
           remainingInvoices={remainingInvoices}
@@ -109,10 +95,8 @@ export default function InvoiceTable() {
         />
       )}
 
-      {/* Error message if clicked and no remaining invoices */}
       {errorMessage && <Message type="error" message={errorMessage} />}
 
-      {/* Button and heading wrapper */}
       <div className="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row md:gap-0">
         <h1 className="text-3xl font-semibold">Your Invoices</h1>
         <Button
@@ -124,7 +108,7 @@ export default function InvoiceTable() {
         >
           <Link
             href={
-              remainingInvoices && remainingInvoices > 0
+              remainingInvoices !== null && remainingInvoices > 0
                 ? "/invoices/new-invoice"
                 : "#"
             }
@@ -134,12 +118,11 @@ export default function InvoiceTable() {
         </Button>
       </div>
 
-      {/* Filters Component */}
       <InvoiceFilters />
 
       <Separator className="my-6" />
 
-      {sortedInvoices.length === 0 ? (
+      {filteredAndSortedInvoices.length === 0 ? (
         <div className="text-center">
           <p className="text-lg text-muted-foreground">No invoices found.</p>
         </div>
@@ -157,7 +140,7 @@ export default function InvoiceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedInvoices.map((invoice) => (
+              {filteredAndSortedInvoices.map((invoice) => (
                 <TableRow key={invoice.invoiceNo}>
                   <TableCell>#{invoice.invoiceNo}</TableCell>
                   <TableCell className="whitespace-nowrap">
@@ -186,20 +169,16 @@ export default function InvoiceTable() {
         </div>
       )}
 
-      {/* Pagination */}
       <Pagination className="w-full mt-14">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
               href="#"
               onClick={(e) => {
-                if (page === 1)
-                  e.preventDefault(); // Disable if it's the first page
-                else setPage(page - 1);
+                if (page > 1) setPage(page - 1);
+                else e.preventDefault();
               }}
-              className={cn(
-                page === 1 ? "cursor-not-allowed text-gray-400" : ""
-              )} // Style it as disabled
+              className={cn(page === 1 && "cursor-not-allowed text-muted")}
             />
           </PaginationItem>
 
@@ -222,12 +201,11 @@ export default function InvoiceTable() {
             <PaginationNext
               href="#"
               onClick={(e) => {
-                if (page === totalPages)
-                  e.preventDefault(); // Disable if it's the last page
-                else setPage(page + 1);
+                if (page < totalPages) setPage(page + 1);
+                else e.preventDefault();
               }}
               className={cn(
-                page === totalPages ? "cursor-not-allowed text-gray-400" : ""
+                page === totalPages && "cursor-not-allowed text-muted"
               )}
             />
           </PaginationItem>

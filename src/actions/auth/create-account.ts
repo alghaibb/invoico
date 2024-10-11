@@ -3,6 +3,7 @@
 import bcrypt from "bcrypt";
 import { flattenValidationErrors } from "next-safe-action";
 
+import { getIp } from "@/lib/get-ip";
 import { rateLimitByIp } from "@/lib/limiter";
 import prisma from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
@@ -17,10 +18,12 @@ export const createAccount = actionClient
   })
   .action(async ({ parsedInput: { firstName, lastName, email, password, confirmPassword } }) => {
 
+    const ip = getIp();
+
     // Apply rate limiting by IP, limiting to 5 requests in a 10-minute window 
     try {
-      await rateLimitByIp(email, "create-account", {
-        key: "create-account",
+      await rateLimitByIp({
+        key: `create-account-${ip}`,
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window
       });
@@ -63,7 +66,7 @@ export const createAccount = actionClient
         }
       });
     }
-    
+
     // Create user
     await prisma.user.create({
       data: {
