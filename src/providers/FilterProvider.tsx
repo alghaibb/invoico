@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 
 // Define statuses
 type InvoiceStatus = "ALL" | "PENDING" | "PAID" | "OVERDUE";
@@ -23,17 +23,18 @@ interface FilterContextType {
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 // Filter provider component
-export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [status, setStatus] = useState<InvoiceStatus>("ALL");
   const [sortBy, setSortBy] = useState<SortOption>("date");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
+  const value = useMemo(
+    () => ({ status, sortBy, sortOrder, setStatus, setSortBy, setSortOrder }),
+    [status, sortBy, sortOrder]
+  );
+
   return (
-    <FilterContext.Provider
-      value={{ status, sortBy, sortOrder, setStatus, setSortBy, setSortOrder }}
-    >
+    <FilterContext.Provider value={value}>
       {children}
     </FilterContext.Provider>
   );
