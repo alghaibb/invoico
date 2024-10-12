@@ -32,7 +32,7 @@ export const Message: React.FC<MessageProps> = ({ type, message }) => {
       className={clsx(
         messageStyles.base,
         messageStyles[type],
-        "flex items-center"
+        "flex items-center flex-col md:flex-row"
       )}
     >
       <Icon size={20} className={`text-${messageStyles[type].split(" ")[0]}`} />

@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { Invoice } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useState, useEffect, useCallback } from "react";
 
 type InvoiceData = {
   invoices: Invoice[];
@@ -11,47 +13,67 @@ type InvoiceData = {
 };
 
 const useInvoiceData = () => {
+  const { data: session, status } = useSession(); // Use session to track authentication state
+
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     invoices: [],
     remainingInvoices: null,
     totalInvoices: 0,
     planType: null,
-    isGuest: false,
+    isGuest: false, // Default to false
     errorMessage: null,
     loading: true,
   });
 
   const [page, setPage] = useState(1);
-  const pageSize = 10; // Set to 1 to test with 1 invoice per page
+  const pageSize = 10; // Number of invoices per page
 
-  const fetchInvoices = async (page: number = 1, pageSize: number = 10) => { // Set default pageSize to 1
-    try {
-      setInvoiceData((prevState) => ({ ...prevState, loading: true }));
+  const fetchInvoices = useCallback(
+    async (page: number = 1, pageSize: number = 10) => {
+      try {
+        setInvoiceData((prevState) => ({ ...prevState, loading: true }));
 
-      const res = await fetch(`/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`);
-      const { invoices, remainingInvoices, totalInvoices, plan } = await res.json();
+        // Fetch invoices from the API
+        const res = await fetch(`/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`);
+        const data = await res.json();
 
-      setInvoiceData({
-        invoices,
-        remainingInvoices,
-        totalInvoices,
-        planType: plan?.type || null,
-        isGuest: !plan,
-        errorMessage: null,
-        loading: false,
-      });
-    } catch (error) {
-      setInvoiceData((prevState) => ({
-        ...prevState,
-        loading: false,
-        errorMessage: "Failed to fetch invoices",
-      }));
-    }
-  };
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to fetch invoices");
+        }
 
+        setInvoiceData({
+          invoices: data.invoices || [], // Ensure empty array if no invoices
+          remainingInvoices: data.remainingInvoices || 0,
+          totalInvoices: data.totalInvoices || 0,
+          planType: data.plan?.type || null,
+          isGuest: !session?.user, // If no session, treat as guest
+          errorMessage: null,
+          loading: false, // Set loading to false after data is fetched
+        });
+      } catch (error) {
+        setInvoiceData((prevState) => ({
+          ...prevState,
+          loading: false,
+          errorMessage: error instanceof Error ? error.message : "Failed to fetch invoices",
+        }));
+      }
+    },
+    [session]
+  );
+
+  // Fetch invoices when the page or session changes
   useEffect(() => {
+    if (status === "loading") return; // Don't fetch while session is loading
+
+    // Set isGuest based on session state
+    setInvoiceData((prevState) => ({
+      ...prevState,
+      isGuest: !session?.user,
+    }));
+
+    // Fetch invoices on page or session change
     fetchInvoices(page, pageSize);
-  }, [page]);
+  }, [page, session, status, fetchInvoices, pageSize]);
 
   return {
     ...invoiceData,

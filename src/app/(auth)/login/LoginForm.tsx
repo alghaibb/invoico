@@ -57,7 +57,8 @@ const LoginForm: React.FC = () => {
   // Redirect on successful login
   useEffect(() => {
     if (result?.data?.success) {
-      router.push("/invoices"); // Redirect to your dashboard page or another protected route
+      router.push("/invoices");
+      window.location.href = "/invoices";
     } else if (result?.data?.error) {
       setError(result.data.error); // Set error message if there's any
     }

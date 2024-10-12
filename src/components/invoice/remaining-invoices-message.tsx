@@ -5,18 +5,18 @@ import Link from "next/link";
 import { Message } from "@/components/custom-message";
 
 type RemainingInvoicesMessageProps = {
-  remainingInvoices: number;
+  remainingInvoices: number | null;
   isGuest: boolean;
 };
 
 export const RemainingInvoicesMessage = ({
-  remainingInvoices,
+  remainingInvoices = 0,
   isGuest,
 }: RemainingInvoicesMessageProps) => {
   const warningThreshold = 5;
 
+  // Guest Logic
   if (isGuest) {
-    // If the guest has 0 remaining invoices, display a warning message.
     if (remainingInvoices === 0) {
       return (
         <Message
@@ -37,7 +37,6 @@ export const RemainingInvoicesMessage = ({
       );
     }
 
-    // If the guest has 1 remaining invoice, display a warning with the link.
     return (
       <Message
         type={remainingInvoices === 1 ? "warning" : "info"}
@@ -63,11 +62,22 @@ export const RemainingInvoicesMessage = ({
     );
   }
 
-  // For non-guests, use the normal warning/info message based on their plan.
+  // User Logic (not a guest)
+  if (remainingInvoices === 0) {
+    return (
+      <Message
+        type="warning"
+        message="You have reached your invoice limit for this month. Please upgrade your plan or wait until next month to create more invoices."
+      />
+    );
+  }
+
   return (
     <Message
-      type={remainingInvoices <= warningThreshold ? "warning" : "info"}
-      message={`You have ${remainingInvoices} invoices left to create according to your plan.`}
+      type={remainingInvoices !== null && remainingInvoices <= warningThreshold ? "warning" : "info"}
+      message={`You have ${remainingInvoices} invoice${
+        remainingInvoices === 1 ? "" : "s"
+      } left to create according to your plan.`}
     />
   );
 };

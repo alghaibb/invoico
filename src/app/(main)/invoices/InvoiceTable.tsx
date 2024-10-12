@@ -99,23 +99,21 @@ export default function InvoiceTable() {
 
       <div className="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row md:gap-0">
         <h1 className="text-3xl font-semibold">Your Invoices</h1>
-        <Button
-          variant="ghost"
-          asChild
-          className="flex items-center"
-          onClick={handleCreateInvoiceClick}
-          disabled={remainingInvoices === 0}
+        <Link
+          href={(remainingInvoices ?? 0) > 0 ? "/invoices/new-invoice" : "#"}
+          onClick={
+            (remainingInvoices ?? 0) === 0
+              ? handleCreateInvoiceClick
+              : undefined
+          }
         >
-          <Link
-            href={
-              remainingInvoices !== null && remainingInvoices > 0
-                ? "/invoices/new-invoice"
-                : "#"
-            }
+          <Button
+            variant="ghost"
+            className="flex items-center"
           >
-            Create New Invoice <CiCirclePlus className="w-5 h-5 ml-2" />
-          </Link>
-        </Button>
+            Create New Invoice <CiCirclePlus className={cn(`w-5 h-5 ml-2`)} />
+          </Button>
+        </Link>
       </div>
 
       <InvoiceFilters />

@@ -57,9 +57,17 @@ const MobileNav = () => {
 
           {/* Login/User Button */}
           {session ? (
-            <LogoutButton className="w-full">
-              <Button className="w-full">Log Out</Button>
-            </LogoutButton>
+            <div className="flex flex-col w-full ">
+              <Link href="/account" onClick={closeMenu}>
+                <Button variant="outline" className="w-full">
+                  Account
+                </Button>
+              </Link>
+
+              <LogoutButton className="w-full">
+                <Button className="w-full">Log Out</Button>
+              </LogoutButton>
+            </div>
           ) : (
             <div className="flex flex-col w-full space-y-1" onClick={closeMenu}>
               <Link href="/login">

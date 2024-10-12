@@ -5,7 +5,7 @@ import { flattenValidationErrors } from "next-safe-action";
 
 import { signIn } from "@/auth";
 import { getIp } from "@/lib/get-ip";
-import { rateLimitByIp, rateLimitByKey } from "@/lib/limiter"; // You might need a more generic limiter for keys like email
+import { rateLimitByIp, rateLimitByKey } from "@/lib/limiter";
 import { actionClient } from "@/lib/safe-action";
 import { getUserByEmail } from "@/utils/user/getUser";
 import { LoginSchema } from "@/validations/auth";
