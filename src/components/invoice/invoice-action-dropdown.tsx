@@ -129,9 +129,9 @@ const InvoiceActionsDropdown = ({
       <DropdownMenuTrigger asChild>
         <button
           className="flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none"
-          disabled={isDeleting}
+          disabled={isDeleting || isLoading}
         >
-          {isDeleting ? (
+          {isDeleting || isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <MoreHorizontal className="w-5 h-5" />
@@ -172,7 +172,7 @@ const InvoiceActionsDropdown = ({
             triggerElement={
               <button
                 className="px-4 py-2 text-sm text-red-500 duration-100 cursor-pointer hover:text-red-300 focus:text-red-300"
-                disabled={isDeleting}
+                disabled={isDeleting || isLoading}
               >
                 Delete Invoice
               </button>
