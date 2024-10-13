@@ -107,10 +107,7 @@ export default function InvoiceTable() {
               : undefined
           }
         >
-          <Button
-            variant="ghost"
-            className="flex items-center"
-          >
+          <Button variant="ghost" className="flex items-center">
             Create New Invoice <CiCirclePlus className={cn(`w-5 h-5 ml-2`)} />
           </Button>
         </Link>
