@@ -22,7 +22,7 @@ export const createContactMessage = actionClient
 
     // Apply rate limiting by IP, limiting to 5 requests in a 10-minute window
     try {
-      await rateLimitByIp(userEmail, "create-contact-message", {
+      await rateLimitByIp({
         key: `create-contact-message=${userEmail}`,
         limit: 5,
         window: 10 * 60 * 1000, // 10 minutes window
