@@ -136,6 +136,7 @@ model UserMonthlyUsage {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, month])
   @@map("user_monthly_usages")
 }
 
@@ -156,7 +157,6 @@ model Plan {
   type         PlanType @unique
   invoiceLimit Int
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 
   users User[]
 
@@ -167,14 +167,14 @@ model Invoice {
   id              String        @id @default(cuid())
   invoiceNo       String
   invoiceTitle    String
-  fromName        String
-  fromEmail       String
-  fromAddress     String
+  fromName        String?
+  fromEmail       String?
+  fromAddress     String?
   fromPhoneNumber String?
   abn             String?
-  toName          String
-  toEmail         String
-  toAddress       String
+  toName          String?
+  toEmail         String?
+  toAddress       String?
   toPhoneNumber   String?
   toMobile        String?
   toFax           String?

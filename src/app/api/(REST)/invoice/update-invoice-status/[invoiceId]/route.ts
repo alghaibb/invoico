@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import prisma from '@/lib/prisma';
-import { getSession } from '@/utils/session';
+import prisma from "@/lib/prisma";
+import { getSession } from "@/utils/session";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function PATCH(req: NextRequest, { params }: { params: { invoiceId: string } }) {
   const invoiceId = params.invoiceId;
@@ -21,7 +21,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { invoiceId:
     });
 
     if (!invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+      return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
     }
 
     // Check if the new status is the same as the current status
@@ -31,18 +31,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { invoiceId:
 
     // Update the invoice status based on user permissions
     if (invoice.userId && invoice.userId !== userId) {
-      return NextResponse.json({ error: 'You do not have permission to update this invoice.' }, { status: 403 });
+      return NextResponse.json({ error: "You do not have permission to update this invoice." }, { status: 403 });
     }
 
-    // Authenticated user is allowed, so proceed to update the user's invoice status
+    // Authenticated user is allowed, so proceed to update the user"s invoice status
     await prisma.invoice.update({
       where: { id: invoiceId },
       data: { status: newStatus },
     });
 
-    return NextResponse.json({ success: 'Invoice status updated successfully' }, { status: 200 });
+    return NextResponse.json({ success: "Invoice status updated successfully" }, { status: 200 });
   } catch (error) {
-    console.error('Error updating invoice status:', error);
-    return NextResponse.json({ error: 'An error occurred while updating the invoice status' }, { status: 500 });
+    console.error("Error updating invoice status:", error);
+    return NextResponse.json({ error: "An error occurred while updating the invoice status" }, { status: 500 });
   }
 }

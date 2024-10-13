@@ -482,9 +482,9 @@ const CreateInvoiceForm: React.FC = () => {
                         <Input
                           type="number"
                           className="pl-6"
-                          step="0.01"
+                          step="1"
                           value={
-                            form.watch(`items.${index}.price`).toFixed(2) || 0
+                            form.watch(`items.${index}.price`)
                           }
                           onChange={(e) =>
                             setValue(

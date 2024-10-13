@@ -10,20 +10,23 @@ const InvoiceItemSchema = z.object({
 
 // Invoice schema
 export const InvoiceCreateSchema = z.object({
+  id: z.string().optional(),
   invoiceTitle: z.string().min(1, "Invoice title is required"),
   invoiceNo: z.string().optional(),
-  fromName: z.string().min(1, "Sender name is required"),
-  fromEmail: z.string().email("Invalid sender email address"),
-  fromAddress: z.string().min(1, "Sender address is required"),
-  fromPhoneNumber: z.string().optional(),
-  abn: z.string().optional(),
 
-  toName: z.string().min(1, "Recipient name is required"),
-  toEmail: z.string().email("Invalid recipient email address"),
-  toAddress: z.string().min(1, "Recipient address is required"),
-  toPhoneNumber: z.string().optional(),
-  toMobile: z.string().optional(),
-  toFax: z.string().optional(),
+  // Preprocess the optional fields to convert empty strings to undefined
+  fromName: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Sender name is required").optional()),
+  fromEmail: z.preprocess((val) => val === "" ? undefined : val, z.string().email("Invalid sender email address").optional()),
+  fromAddress: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Sender address is required").optional()),
+  fromPhoneNumber: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  abn: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+
+  toName: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Recipient name is required").optional()),
+  toEmail: z.preprocess((val) => val === "" ? undefined : val, z.string().email("Invalid recipient email address").optional()),
+  toAddress: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Recipient address is required").optional()),
+  toPhoneNumber: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  toMobile: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  toFax: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
 
   issueDate: z.date().or(z.string().transform((val) => new Date(val))),
   dueDate: z.date().or(z.string().transform((val) => new Date(val))),

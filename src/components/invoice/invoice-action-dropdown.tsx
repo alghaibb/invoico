@@ -57,7 +57,8 @@ const InvoiceActionsDropdown = ({
           description: result.success,
         });
 
-        router.refresh();
+        router.push("/invoices");
+        window.location.href = "/invoices";
       } else {
         toast({
           title: "Error",

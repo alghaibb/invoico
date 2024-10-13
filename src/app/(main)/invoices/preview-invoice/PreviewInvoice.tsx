@@ -17,38 +17,15 @@ import {
 import { InvoiceCreateSchema } from "@/validations/invoice";
 
 // Define the type for invoiceData using the Zod schema or Prisma model
-type InvoiceData = z.infer<typeof InvoiceCreateSchema>;
+type InvoiceData = z.infer<typeof InvoiceCreateSchema>
 
 interface PreviewInvoiceProps {
   invoice: InvoiceData;
 }
 
 const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
-  const downloadPDF = async () => {
-    const input = document.getElementById("invoice-preview");
-
-    if (!input) {
-      console.error("Invoice preview element not found!");
-      return;
-    }
-
-    const filename = invoice.invoiceNo;
-
-    // Dynamically import the html2pdf library
-    const html2pdf = await require("html2pdf.js");
-
-    html2pdf(input, {
-      margin: 20,
-      filename: `${filename}.pdf`,
-      html2canvas: {
-        ignoreElements: (element: { id: string }) => {
-          const ignoreIds = ["download-pdf", "view-invoices"];
-
-          return ignoreIds.includes(element.id);
-        },
-      },
-    });
-  };
+  // Log invoice object to verify the id is passed correctly
+  console.log("Invoice data passed to PreviewInvoice:", invoice);
 
   return (
     <div className="container p-6 mx-auto">
@@ -146,13 +123,14 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
           <Button asChild id="view-invoices">
             <Link href="/invoices">View All Invoices</Link>
           </Button>
-          <Button
-            onClick={downloadPDF}
-            className="w-full md:w-min"
-            id="download-pdf"
-            variant="outline"
-          >
-            Download PDF <IoDownloadOutline className="w-5 h-5 ml-2" />
+          <Button asChild id="download-pdf" variant="outline">
+            <Link
+              href={`/invoices/preview-invoice/${invoice.id}/pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download PDF <IoDownloadOutline className="w-5 h-5 ml-2" />
+            </Link>
           </Button>
         </div>
       </div>

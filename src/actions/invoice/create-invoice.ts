@@ -87,7 +87,7 @@ export const createInvoice = actionClient
 
         // Increment the invoice count for the user
         await prisma.userMonthlyUsage.upsert({
-          where: { id: userId },
+          where: { userId },
           update: { invoices: { increment: 1 } },
           create: {
             userId,

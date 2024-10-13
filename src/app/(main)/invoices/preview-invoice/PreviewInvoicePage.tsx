@@ -21,24 +21,28 @@ const PreviewInvoicePage = async ({ params }: { params: Params }) => {
   if (!invoice) {
     return <div>Invoice not found</div>;
   }
-
+  
   // Transform invoice data to match Zod schema
   const invoiceData = {
-    invoiceNo: invoice.invoiceNo,
-    invoiceTitle: invoice.invoiceTitle,
-    fromName: invoice.fromName,
-    fromEmail: invoice.fromEmail,
-    fromAddress: invoice.fromAddress,
+    id: invoice.id,
+    invoiceNo: invoice.invoiceNo ?? undefined,
+    invoiceTitle: invoice.invoiceTitle ?? undefined,
+    fromName: invoice.fromName ?? undefined,
+    fromEmail: invoice.fromEmail ?? undefined,
+    fromAddress: invoice.fromAddress ?? undefined,
     fromPhoneNumber: invoice.fromPhoneNumber ?? undefined,
     abn: invoice.abn ?? undefined,
-    toName: invoice.toName,
-    toEmail: invoice.toEmail,
-    toAddress: invoice.toAddress,
-    issueDate: invoice.issueDate,
-    dueDate: invoice.dueDate,
-    status: invoice.status,
-    totalAmount: invoice.totalAmount,
-    taxRate: invoice.taxRate,
+    toName: invoice.toName ?? undefined,
+    toEmail: invoice.toEmail ?? undefined,
+    toAddress: invoice.toAddress ?? undefined,
+    toPhoneNumber: invoice.toPhoneNumber ?? undefined,
+    toMobile: invoice.toMobile ?? undefined,
+    toFax: invoice.toFax ?? undefined,
+    issueDate: invoice.issueDate ?? undefined,
+    dueDate: invoice.dueDate ?? undefined,
+    status: invoice.status ?? undefined,
+    totalAmount: invoice.totalAmount ?? undefined,
+    taxRate: invoice.taxRate ?? undefined,
     taxAmount: invoice.taxAmount ?? undefined,
     items: invoice.InvoiceItem.map((item) => ({
       description: item.description,

@@ -1,0 +1,27 @@
+/* In previewInvoice.module.css */
+
+/* Scoped under .invoice-container class */
+.invoice-container table,
+.invoice-container tr,
+.invoice-container td,
+.invoice-container th {
+  page-break-inside: avoid; /* Prevent table rows from splitting */
+}
+
+/* Scoped page-break class */
+.invoice-container .page-break {
+  page-break-before: always;
+}
+
+/* Ensure that the PDF content takes the full width of the container */
+.invoice-container #invoice-preview {
+  width: 100%;
+}
+
+/* Ensure no unnecessary blank pages */
+.invoice-container html,
+.invoice-container body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
