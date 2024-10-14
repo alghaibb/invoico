@@ -1,3 +1,5 @@
+"use client";
+
 import { Invoice } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback } from "react";

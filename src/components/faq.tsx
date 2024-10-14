@@ -13,7 +13,10 @@ import {
 
 const FaqSection = () => {
   return (
-    <section className="py-10 text-foreground bg-background" id="faq">
+    <section
+      className="py-20 text-foreground bg-gradient-to-b from-muted to-background"
+      id="faq"
+    >
       <motion.div
         className="container max-w-md px-6 mx-auto md:max-w-4xl"
         initial={{ opacity: 0, y: 30 }}
@@ -21,7 +24,7 @@ const FaqSection = () => {
         transition={{ delay: 0.8, duration: 0.5 }}
       >
         <motion.h2
-          className="mb-8 text-4xl font-bold text-center"
+          className="mb-8 text-5xl font-bold text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0, duration: 0.5 }}

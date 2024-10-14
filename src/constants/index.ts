@@ -1,3 +1,5 @@
+import { AiOutlineUserAdd, AiOutlineFileText, AiOutlineSend } from "react-icons/ai";
+
 // Navbar links 
 export const navbarLinks = [
   { label: "Features", href: "/features", },
@@ -40,3 +42,27 @@ export const faqItems = [
     answer: "We offer three flexible plans to cater to different needs: Free, Pro, and Business. Our Free plan is available to all registered users and allows for the creation of up to 10 invoices per month. The Pro and Business plans offer additional features and higher invoice limits to support growing businesses."
   },
 ]
+
+// How it works steps
+export const howItWorksSteps = [
+  {
+    title: "1. Sign Up or Start as Guest",
+    description:
+      "Create an account to unlock more features or start as a guest to create up to 5 free invoices.",
+    link: "/create-account",
+    buttonText: "Create an account",
+    icon: AiOutlineUserAdd,
+  },
+  {
+    title: "2. Create and Customize Your Invoice",
+    description:
+      "Fill in the invoice form with your business details, add items, and specify payment terms. The system will automatically calculate tax and totals.",
+    icon: AiOutlineFileText,
+  },
+  {
+    title: "3. Send, Track, and Get Paid",
+    description:
+      "Send invoices directly via email, track payment statuses, and manage your invoices easily from your dashboard. Upgrade your plan for more invoices and premium features.",
+    icon: AiOutlineSend,
+  },
+];
