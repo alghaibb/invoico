@@ -4,12 +4,12 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 
 import { auth } from "@/auth";
-import Navbar from "@/components/navbar/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 
 import "@/styles/globals.css";
 import { FilterProvider } from "@/providers/FilterProvider";
 import Footer from "@/components/footer";
+import Header from "@/components/navbar/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,7 +35,7 @@ export default async function RootLayout({
             className={`${inter.className} min-h-screen flex flex-col relative`}
           >
             <main className="flex-grow">
-              <Navbar />
+              <Header />
               {children}
               <Footer />
             </main>

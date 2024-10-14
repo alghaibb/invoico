@@ -64,6 +64,7 @@ const Hero = () => {
             width={1000}
             height={1000}
             className="object-cover"
+            priority
           />
         </motion.div>
       </motion.div>
