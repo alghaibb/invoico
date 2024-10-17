@@ -59,6 +59,11 @@ export default function InvoiceTable() {
 
   const { status, sortBy, sortOrder } = useFilter();
 
+  // Calcuate the total amount paid from invoices
+  const totalPaidAmount = invoices
+    .filter((invoice) => invoice.status === "PAID")
+    .reduce((acc, invoice) => acc + invoice.totalAmount, 0);
+
   const handleCreateInvoiceClick = () => {
     setInvoiceData((prevState) => ({ ...prevState, remainingInvoices: null }));
 
@@ -113,6 +118,15 @@ export default function InvoiceTable() {
         </Link>
       </div>
 
+      {/* Total Paid Amount Display */}
+      <div className="flex justify-between items-center mb-4 bg-muted py-4 px-4">
+        <h2 className="text-xl font-semibold">
+          Total Paid Amount: {formatCurrency(totalPaidAmount)}
+        </h2>
+      </div>
+
+      <Separator className="my-6" />
+
       <InvoiceFilters />
 
       <Separator className="my-6" />
@@ -129,7 +143,7 @@ export default function InvoiceTable() {
                 <TableHead>Invoice Number</TableHead>
                 <TableHead>Client</TableHead>
                 <TableHead>Due Date</TableHead>
-                <TableHead>Balance</TableHead>
+                <TableHead>Balance Due</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -147,7 +161,11 @@ export default function InvoiceTable() {
                     </div>
                   </TableCell>
                   <TableCell>{formatDate(invoice.dueDate)}</TableCell>
-                  <TableCell>{formatCurrency(invoice.totalAmount)}</TableCell>
+                  <TableCell>
+                    {invoice.status === "PAID"
+                      ? formatCurrency(0)
+                      : formatCurrency(invoice.totalAmount)}
+                  </TableCell>
                   <TableCell>
                     <InvoiceStatusBadge status={invoice.status} />
                   </TableCell>

@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 import { getIp } from '@/lib/get-ip';
-import prisma from '@/lib/prisma';
 import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser } from '@/utils/invoice';
 import { getSession } from '@/utils/session';
 

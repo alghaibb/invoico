@@ -20,6 +20,10 @@ export async function limitUserInvoices(userId: string) {
   // Find the user's monthly usage record for the current month
   let userUsage = await prisma.userMonthlyUsage.findUnique({
     where: { userId },
+    cacheStrategy: {
+      ttl: 60, // Cache user usage for 60 seconds
+      swr: 120, // Serve stale data for 120 seconds
+    }
   });
 
   // If no record exists or the record is for a previous month, return the full limit for the current month

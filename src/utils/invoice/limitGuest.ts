@@ -14,6 +14,10 @@ export async function limitGuestInvoices() {
   // Find guest usage by IP address
   const guestUsage = await prisma.guestUsage.findUnique({
     where: { ipAddress: ip },
+    cacheStrategy: {
+      ttl: 60, // Cache guest usage for 60 seconds
+      swr: 120, // Serve stale data for 120 seconds
+    }
   });
 
   // If no guest usage record exists, set remainingInvoices to MAX_GUEST_INVOICES

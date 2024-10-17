@@ -23,6 +23,10 @@ export async function getSession() {
         }
       },
     },
+    cacheStrategy: {
+      ttl: 60, // Cache session for 60 seconds
+      swr: 120, // Serve stale data for 120 seconds
+    }
   });
 
   return session;

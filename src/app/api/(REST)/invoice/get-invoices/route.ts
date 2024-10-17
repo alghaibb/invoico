@@ -33,6 +33,10 @@ export async function GET(request: NextRequest) {
             include: { InvoiceItem: true },
           },
         },
+        cacheStrategy: {
+          ttl: 120, // Cache invoices for 2 minutes
+          swr: 300, // Serve stale data for up to 5 minutes while refreshing
+        },
       });
 
       if (!user) {

@@ -5,7 +5,6 @@ import { flattenValidationErrors } from "next-safe-action";
 import { rateLimitByIp } from "@/lib/limiter";
 import prisma from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
-import { getSession } from "@/utils/session";
 import { verifyVerificationCode, deleteVerificationCode } from "@/utils/token";
 import { VerifyEmailSchema } from "@/validations/auth";
 

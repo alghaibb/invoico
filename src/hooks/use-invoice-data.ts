@@ -1,5 +1,3 @@
-"use client";
-
 import { Invoice } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback } from "react";
@@ -35,7 +33,7 @@ const useInvoiceData = () => {
       try {
         setInvoiceData((prevState) => ({ ...prevState, loading: true }));
 
-        // Fetch invoices from the API
+        // Fetch invoices from the API only if we don’t have them already
         const res = await fetch(`/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`);
         const data = await res.json();
 
@@ -43,7 +41,7 @@ const useInvoiceData = () => {
           throw new Error(data.error || "Failed to fetch invoices");
         }
 
-        setInvoiceData({
+        setInvoiceData((prevState) => ({
           invoices: data.invoices || [], // Ensure empty array if no invoices
           remainingInvoices: data.remainingInvoices || 0,
           totalInvoices: data.totalInvoices || 0,
@@ -51,7 +49,7 @@ const useInvoiceData = () => {
           isGuest: !session?.user, // If no session, treat as guest
           errorMessage: null,
           loading: false, // Set loading to false after data is fetched
-        });
+        }));
       } catch (error) {
         setInvoiceData((prevState) => ({
           ...prevState,
@@ -63,19 +61,21 @@ const useInvoiceData = () => {
     [session]
   );
 
-  // Fetch invoices when the page or session changes
+  // Fetch invoices when the page or session changes, and only fetch once unless data is invalidated
   useEffect(() => {
     if (status === "loading") return; // Don't fetch while session is loading
+
+    // Check if invoices are already loaded to avoid refetching
+    if (!invoiceData.invoices.length) {
+      fetchInvoices(page, pageSize);
+    }
 
     // Set isGuest based on session state
     setInvoiceData((prevState) => ({
       ...prevState,
       isGuest: !session?.user,
     }));
-
-    // Fetch invoices on page or session change
-    fetchInvoices(page, pageSize);
-  }, [page, session, status, fetchInvoices, pageSize]);
+  }, [page, session, status, fetchInvoices, pageSize, invoiceData.invoices.length]);
 
   return {
     ...invoiceData,
