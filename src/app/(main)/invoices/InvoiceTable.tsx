@@ -17,6 +17,8 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -206,28 +208,18 @@ export default function InvoiceTable({
       )}
 
       <Pagination className="w-full mt-14">
-        <PaginationContent className="flex justify-center space-x-4">
-          {" "}
-          {/* Added space between items */}
-          {/* Previous Page Button */}
+        <PaginationContent>
           <PaginationItem>
-            <PaginationLink
+            <PaginationPrevious
               href="#"
               onClick={(e) => {
-                e.preventDefault();
-                if (page > 1) {
-                  setPage(page - 1);
-                }
+                if (page > 1) setPage(page - 1);
+                else e.preventDefault();
               }}
-              className={cn(
-                "px-10 py-2",
-                page === 1 && "cursor-not-allowed text-muted"
-              )}
-            >
-              Previous
-            </PaginationLink>
+              className={cn(page === 1 && "cursor-not-allowed text-muted")}
+            />
           </PaginationItem>
-          {/* Page Numbers */}
+
           {Array.from({ length: totalPages }, (_, index) => (
             <PaginationItem key={index}>
               <PaginationLink
@@ -236,30 +228,24 @@ export default function InvoiceTable({
                   e.preventDefault();
                   setPage(index + 1);
                 }}
-                isActive={currentPage === index + 1}
-                className="px-4 py-2"
+                isActive={page === index + 1}
               >
                 {index + 1}
               </PaginationLink>
             </PaginationItem>
           ))}
-          {/* Next Page Button */}
+
           <PaginationItem>
-            <PaginationLink
+            <PaginationNext
               href="#"
               onClick={(e) => {
-                e.preventDefault();
-                if (page < totalPages) {
-                  setPage(page + 1);
-                }
+                if (page < totalPages) setPage(page + 1);
+                else e.preventDefault();
               }}
               className={cn(
-                "px-10 py-2",
                 page === totalPages && "cursor-not-allowed text-muted"
               )}
-            >
-              Next
-            </PaginationLink>
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
