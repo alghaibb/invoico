@@ -1,6 +1,8 @@
 "use client";
 
+import { Invoice } from "@prisma/client";
 import Link from "next/link";
+import { useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
 import { Message } from "@/components/custom-message";
@@ -15,8 +17,6 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -32,6 +32,13 @@ import { cn } from "@/lib/utils";
 import { useFilter } from "@/providers/FilterProvider";
 import { formatCurrency, formatDate } from "@/utils/format";
 
+type InvoiceTableProps = {
+  initialInvoices: Invoice[];
+  totalPages: number;
+  currentPage: number;
+  initialTotalInvoices: number;
+};
+
 // Badge component for displaying invoice status
 const InvoiceStatusBadge = ({ status }: { status: string }) => {
   const variant =
@@ -44,11 +51,15 @@ const InvoiceStatusBadge = ({ status }: { status: string }) => {
   return <Badge variant={variant}>{status}</Badge>;
 };
 
-export default function InvoiceTable() {
+export default function InvoiceTable({
+  initialInvoices,
+  totalPages,
+  currentPage,
+  initialTotalInvoices,
+}: InvoiceTableProps) {
   const {
     invoices,
     remainingInvoices,
-    totalPages,
     page,
     setPage,
     isGuest,
@@ -59,7 +70,20 @@ export default function InvoiceTable() {
 
   const { status, sortBy, sortOrder } = useFilter();
 
-  // Calcuate the total amount paid from invoices
+  // Set initial data from server
+  useEffect(() => {
+    setInvoiceData({
+      invoices: initialInvoices,
+      remainingInvoices: null,
+      totalInvoices: initialTotalInvoices,
+      planType: null,
+      isGuest: false,
+      errorMessage: null,
+      loading: false,
+    });
+  }, [initialInvoices, initialTotalInvoices, setInvoiceData]);
+
+  // Calculate the total amount paid from invoices
   const totalPaidAmount = invoices
     .filter((invoice) => invoice.status === "PAID")
     .reduce((acc, invoice) => acc + invoice.totalAmount, 0);
@@ -118,8 +142,7 @@ export default function InvoiceTable() {
         </Link>
       </div>
 
-      {/* Total Paid Amount Display */}
-      <div className="flex justify-between items-center mb-4 bg-muted py-4 px-4">
+      <div className="flex items-center justify-between px-4 py-4 mb-4 bg-muted">
         <h2 className="text-xl font-semibold">
           Total Paid Amount: {formatCurrency(totalPaidAmount)}
         </h2>
@@ -183,18 +206,28 @@ export default function InvoiceTable() {
       )}
 
       <Pagination className="w-full mt-14">
-        <PaginationContent>
+        <PaginationContent className="flex justify-center space-x-4">
+          {" "}
+          {/* Added space between items */}
+          {/* Previous Page Button */}
           <PaginationItem>
-            <PaginationPrevious
+            <PaginationLink
               href="#"
               onClick={(e) => {
-                if (page > 1) setPage(page - 1);
-                else e.preventDefault();
+                e.preventDefault();
+                if (page > 1) {
+                  setPage(page - 1);
+                }
               }}
-              className={cn(page === 1 && "cursor-not-allowed text-muted")}
-            />
+              className={cn(
+                "px-10 py-2",
+                page === 1 && "cursor-not-allowed text-muted"
+              )}
+            >
+              Previous
+            </PaginationLink>
           </PaginationItem>
-
+          {/* Page Numbers */}
           {Array.from({ length: totalPages }, (_, index) => (
             <PaginationItem key={index}>
               <PaginationLink
@@ -203,24 +236,30 @@ export default function InvoiceTable() {
                   e.preventDefault();
                   setPage(index + 1);
                 }}
-                isActive={page === index + 1}
+                isActive={currentPage === index + 1}
+                className="px-4 py-2"
               >
                 {index + 1}
               </PaginationLink>
             </PaginationItem>
           ))}
-
+          {/* Next Page Button */}
           <PaginationItem>
-            <PaginationNext
+            <PaginationLink
               href="#"
               onClick={(e) => {
-                if (page < totalPages) setPage(page + 1);
-                else e.preventDefault();
+                e.preventDefault();
+                if (page < totalPages) {
+                  setPage(page + 1);
+                }
               }}
               className={cn(
+                "px-10 py-2",
                 page === totalPages && "cursor-not-allowed text-muted"
               )}
-            />
+            >
+              Next
+            </PaginationLink>
           </PaginationItem>
         </PaginationContent>
       </Pagination>
