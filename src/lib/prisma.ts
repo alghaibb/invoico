@@ -1,18 +1,9 @@
-import { Pool } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
-// Prisma client factory function with Accelerate extension
 const prismaClientSingleton = () => {
-  // Initialize Neon pool
-  const neon = new Pool({ connectionString: process.env.POSTGRES_PRISMA_URL });
-
-  // Setup Neon adapter for Prisma
-  const adapter = new PrismaNeon(neon);
-
   // Create Prisma client and extend it with Accelerate
-  return new PrismaClient({ adapter }).$extends(withAccelerate());
+  return new PrismaClient().$extends(withAccelerate());
 };
 
 // Ensure Prisma client singleton pattern to avoid multiple instances
