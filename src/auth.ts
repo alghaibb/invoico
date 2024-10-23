@@ -12,7 +12,6 @@ import { v4 as uuid } from "uuid";
 import prisma from "./lib/prisma";
 import { getUserByEmail } from "./utils/user/getUser";
 
-
 const adapter = PrismaAdapter(prisma) as Adapter;
 
 const authConfig: NextAuthConfig = {
@@ -42,7 +41,7 @@ const authConfig: NextAuthConfig = {
           return res as User;
         }
 
-        return null
+        return null;
       },
     }),
   ],
@@ -75,40 +74,40 @@ const authConfig: NextAuthConfig = {
     },
     async jwt({ token, user, account }) {
       if (account?.provider === "credentials") {
-        token.credentials = true
+        token.credentials = true;
       }
-      return token
+      return token;
     },
   },
   jwt: {
     encode: async function (params) {
       if (params.token?.credentials) {
-        const sessionToken = uuid()
+        const sessionToken = uuid();
 
         if (!params.token.sub) {
-          throw new Error("No user ID found in token")
+          throw new Error("No user ID found in token");
         }
 
         const createdSession = await adapter?.createSession?.({
           sessionToken: sessionToken,
           userId: params.token.sub,
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-        })
+        });
 
         if (!createdSession) {
-          throw new Error("Failed to create session")
+          throw new Error("Failed to create session");
         }
 
-        return sessionToken
+        return sessionToken;
       }
-      return defaultEncode(params)
+      return defaultEncode(params);
     },
   },
   secret: process.env.AUTH_SECRET!,
   pages: {
     signIn: "/login",
     error: "/login",
-  }
+  },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

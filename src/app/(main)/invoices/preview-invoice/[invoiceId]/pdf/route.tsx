@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 // API Route to handle PDF generation for an invoice
 export async function GET(
   request: NextRequest,
-  { params }: { params: { invoiceId: string } }
+  { params }: { params: { invoiceId: string } },
 ) {
   try {
     const invoiceId = params.invoiceId; // Extract invoiceId from path params
@@ -20,7 +20,7 @@ export async function GET(
     if (!invoiceId) {
       return NextResponse.json(
         { error: "Invoice ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -47,7 +47,7 @@ export async function GET(
 
     // Render the PDF to a Node.js readable stream using react-pdf
     const pdfStream = await renderToStream(
-      <InvoicePDF invoice={transformedInvoice} />
+      <InvoicePDF invoice={transformedInvoice} />,
     );
 
     // Convert Node.js ReadableStream to Web ReadableStream
@@ -64,7 +64,7 @@ export async function GET(
     console.error("Error generating PDF:", error);
     return NextResponse.json(
       { error: "An error occurred while generating the PDF" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

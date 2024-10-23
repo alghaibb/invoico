@@ -7,7 +7,7 @@ export const getUserByEmail = async (email: string, password?: string) => {
     cacheStrategy: {
       ttl: 60, // Cache user for 60 seconds
       swr: 120, // Revalidate user after 120 seconds
-    }
+    },
   });
 };
 
@@ -17,8 +17,8 @@ export const getUserById = async (id: string) => {
     where: { id },
     cacheStrategy: {
       ttl: 30, // Cache user for 30 seconds
-      swr: 60 // Serve stale data for 60 seconds
-    }
+      swr: 60, // Serve stale data for 60 seconds
+    },
   });
 };
 
@@ -36,8 +36,8 @@ export const getUserByIdWithPlan = async (id: string) => {
     include: { Plan: true },
     cacheStrategy: {
       ttl: 30, // Cache user for 30 seconds
-      swr: 120 // Serve stale data for 120 seconds
-    }
+      swr: 120, // Serve stale data for 120 seconds
+    },
   });
 };
 

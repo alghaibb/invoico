@@ -35,7 +35,9 @@ export const createContactMessage = actionClient
 
     // Check if authenticated user's email matches the provided email (only if user is authenticated)
     if (session && email !== userEmail) {
-      return { error: "Authenticated user's email doesn't match the provided email." };
+      return {
+        error: "Authenticated user's email doesn't match the provided email.",
+      };
     }
 
     // Create the contact message in the database
@@ -50,7 +52,8 @@ export const createContactMessage = actionClient
     });
 
     return {
-      success: "Your message was sent successfully, we will get back to you as soon as possible.",
+      success:
+        "Your message was sent successfully, we will get back to you as soon as possible.",
       contactMessage,
     };
   });

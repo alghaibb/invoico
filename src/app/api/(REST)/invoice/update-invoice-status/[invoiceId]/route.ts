@@ -5,7 +5,10 @@ import { getSession } from "@/utils/session";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(req: NextRequest, { params }: { params: { invoiceId: string } }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { invoiceId: string } },
+) {
   const invoiceId = params.invoiceId;
   const { status: newStatus } = await req.json(); // Get the updated status from the request body
 
@@ -26,12 +29,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { invoiceId:
 
     // Check if the new status is the same as the current status
     if (invoice.status === newStatus) {
-      return NextResponse.json({ error: `Invoice is already marked as ${newStatus}.` }, { status: 400 });
+      return NextResponse.json(
+        { error: `Invoice is already marked as ${newStatus}.` },
+        { status: 400 },
+      );
     }
 
     // Update the invoice status based on user permissions
     if (invoice.userId && invoice.userId !== userId) {
-      return NextResponse.json({ error: "You do not have permission to update this invoice." }, { status: 403 });
+      return NextResponse.json(
+        { error: "You do not have permission to update this invoice." },
+        { status: 403 },
+      );
     }
 
     // Authenticated user is allowed, so proceed to update the user"s invoice status
@@ -40,9 +49,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { invoiceId:
       data: { status: newStatus },
     });
 
-    return NextResponse.json({ success: "Invoice status updated successfully" }, { status: 200 });
+    return NextResponse.json(
+      { success: "Invoice status updated successfully" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error updating invoice status:", error);
-    return NextResponse.json({ error: "An error occurred while updating the invoice status" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while updating the invoice status" },
+      { status: 500 },
+    );
   }
 }

@@ -90,7 +90,7 @@ const InvoiceActionsDropdown = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ status: newStatus }),
-        }
+        },
       );
 
       const result = await res.json();

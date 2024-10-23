@@ -3,7 +3,6 @@ import { Resend } from "resend";
 import { VerifyEmail, ForgotPassword } from "@/components/emails";
 import prisma from "@/lib/prisma";
 
-
 import { getUserById } from "./user/getUser";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -12,7 +11,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendVerificationEmail = async (
   email: string,
   firstName: string,
-  verificationCode: string
+  verificationCode: string,
 ) => {
   // Get users name from database
   const user = await prisma.user.findFirst({
@@ -39,7 +38,7 @@ export const sendVerificationEmail = async (
 export const sendForgotPasswordEmail = async (
   email: string,
   firstName: string,
-  resetPasswordToken: string
+  resetPasswordToken: string,
 ) => {
   // Get users name from database
   const user = await getUserById(email);

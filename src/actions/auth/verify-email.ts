@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { flattenValidationErrors } from "next-safe-action";
 

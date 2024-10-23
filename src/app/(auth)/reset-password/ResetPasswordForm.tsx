@@ -50,11 +50,11 @@ const ResetPasswordForm: React.FC = () => {
 
   const togglePasswordVisibility = useCallback(
     () => setShowPassword((prev) => !prev),
-    []
+    [],
   );
   const toggleConfirmPasswordVisibility = useCallback(
     () => setShowConfirmPassword((prev) => !prev),
-    []
+    [],
   );
 
   const onSubmit = async (data: ResetPasswordFormData) => {

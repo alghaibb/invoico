@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
 
   const togglePasswordVisibility = useCallback(
     () => setShowPassword((prev) => !prev),
-    []
+    [],
   );
 
   const onSubmit = async (data: LoginFormData) => {

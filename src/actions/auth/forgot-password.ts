@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { flattenValidationErrors } from "next-safe-action";
 
@@ -10,11 +10,10 @@ import { generateResetPasswordToken } from "@/utils/token";
 import { getUserByEmail } from "@/utils/user/getUser";
 import { ForgotPasswordSchema } from "@/validations/auth";
 
-
-
 export const forgotPassword = actionClient
   .schema(ForgotPasswordSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { email } }) => {
     // Get the user by email
@@ -58,7 +57,11 @@ export const forgotPassword = actionClient
     const resetPasswordToken = await generateResetPasswordToken(email);
 
     // Send the reset password email
-    await sendForgotPasswordEmail(email, user.firstName as string, resetPasswordToken);
+    await sendForgotPasswordEmail(
+      email,
+      user.firstName as string,
+      resetPasswordToken,
+    );
 
     // Return success
     return {

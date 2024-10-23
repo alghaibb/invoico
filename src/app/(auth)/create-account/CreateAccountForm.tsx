@@ -50,11 +50,11 @@ const CreateAccountForm: React.FC = () => {
 
   const togglePasswordVisibility = useCallback(
     () => setShowPassword((prev) => !prev),
-    []
+    [],
   );
   const toggleConfirmPasswordVisibility = useCallback(
     () => setShowConfirmPassword((prev) => !prev),
-    []
+    [],
   );
 
   const onSubmit = useCallback(
@@ -62,7 +62,7 @@ const CreateAccountForm: React.FC = () => {
       setError(null); // Reset error message
       execute(data);
     },
-    [execute]
+    [execute],
   );
 
   // Redirect to verify-email page on successful account creation

@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import * as React from "react";
 
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar"; // Ensure this component exists and works with Date objects
 import {
@@ -31,7 +30,7 @@ export function DatePicker({ date, onSelect, disabled }: DatePickerProps) {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal", // Adjust the width here to w-full or any specific width
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

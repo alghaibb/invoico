@@ -4,7 +4,10 @@ import { z } from "zod";
 const InvoiceItemSchema = z.object({
   description: z.string().min(1, "Item description is required"),
   quantity: z.number().min(1, "Quantity must be at least 1"),
-  price: z.preprocess((val) => parseFloat(val as string), z.number().min(0, "Price must be a positive number")),
+  price: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0, "Price must be a positive number"),
+  ),
   total: z.number().min(0, "Total must be a positive number"),
 });
 
@@ -15,18 +18,51 @@ export const InvoiceCreateSchema = z.object({
   invoiceNo: z.string().optional(),
 
   // Preprocess the optional fields to convert empty strings to undefined
-  fromName: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Sender name is required").optional()),
-  fromEmail: z.preprocess((val) => val === "" ? undefined : val, z.string().email("Invalid sender email address").optional()),
-  fromAddress: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Sender address is required").optional()),
-  fromPhoneNumber: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
-  abn: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  fromName: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().min(1, "Sender name is required").optional(),
+  ),
+  fromEmail: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().email("Invalid sender email address").optional(),
+  ),
+  fromAddress: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().min(1, "Sender address is required").optional(),
+  ),
+  fromPhoneNumber: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().optional(),
+  ),
+  abn: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().optional(),
+  ),
 
-  toName: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Recipient name is required").optional()),
-  toEmail: z.preprocess((val) => val === "" ? undefined : val, z.string().email("Invalid recipient email address").optional()),
-  toAddress: z.preprocess((val) => val === "" ? undefined : val, z.string().min(1, "Recipient address is required").optional()),
-  toPhoneNumber: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
-  toMobile: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
-  toFax: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  toName: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().min(1, "Recipient name is required").optional(),
+  ),
+  toEmail: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().email("Invalid recipient email address").optional(),
+  ),
+  toAddress: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().min(1, "Recipient address is required").optional(),
+  ),
+  toPhoneNumber: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().optional(),
+  ),
+  toMobile: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().optional(),
+  ),
+  toFax: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().optional(),
+  ),
 
   issueDate: z.date().or(z.string().transform((val) => new Date(val))),
   dueDate: z.date().or(z.string().transform((val) => new Date(val))),

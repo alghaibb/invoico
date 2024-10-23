@@ -21,7 +21,7 @@ const PreviewInvoicePage = async ({ params }: { params: Params }) => {
   if (!invoice) {
     return <div>Invoice not found</div>;
   }
-  
+
   // Transform invoice data to match Zod schema
   const invoiceData = {
     id: invoice.id,

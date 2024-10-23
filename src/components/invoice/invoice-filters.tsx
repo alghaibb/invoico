@@ -3,11 +3,9 @@
 import { useEffect } from "react";
 import { PiSortAscendingBold, PiSortDescendingBold } from "react-icons/pi";
 
-
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useFilter } from "@/providers/FilterProvider";
-
 
 // Sort arrow indicator
 const SortIndicator = ({ sortOrder }: { sortOrder: string }) => {
@@ -31,11 +29,11 @@ export const InvoiceFilters = () => {
   const saveStateToLocalStorage = (
     status: string,
     sortBy: string,
-    sortOrder: string
+    sortOrder: string,
   ) => {
     localStorage.setItem(
       "invoiceFilters",
-      JSON.stringify({ status, sortBy, sortOrder })
+      JSON.stringify({ status, sortBy, sortOrder }),
     );
   };
 

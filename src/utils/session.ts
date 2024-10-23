@@ -8,7 +8,7 @@ export async function getSession() {
   const sessionToken = cookieStore.get(
     process.env.NODE_ENV === "production"
       ? "__Secure-authjs.session-token"
-      : "authjs.session-token"
+      : "authjs.session-token",
   );
 
   if (!sessionToken) return null;
@@ -20,13 +20,13 @@ export async function getSession() {
       user: {
         include: {
           Plan: true,
-        }
+        },
       },
     },
     cacheStrategy: {
       ttl: 60, // Cache session for 60 seconds
       swr: 120, // Serve stale data for 120 seconds
-    }
+    },
   });
 
   return session;
@@ -44,6 +44,6 @@ export async function getUserFromSession() {
     name: user.firstName + " " + user.lastName,
     email: user.email,
     planType: user.Plan?.type,
-    planId: user.Plan?.id
+    planId: user.Plan?.id,
   };
 }

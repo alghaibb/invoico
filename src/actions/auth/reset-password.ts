@@ -11,7 +11,8 @@ import { ResetPasswordSchema } from "@/validations/auth";
 
 export const resetPassword = actionClient
   .schema(ResetPasswordSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { password, confirmPassword, token } }) => {
     // Find user by reset password token
@@ -29,7 +30,9 @@ export const resetPassword = actionClient
 
     // If password is the same as the current password, return error
     if (await bcrypt.compare(password, user.password as string)) {
-      return { error: "New password must be different from the current password" };
+      return {
+        error: "New password must be different from the current password",
+      };
     }
 
     // Hash the new password
@@ -48,7 +51,9 @@ export const resetPassword = actionClient
       await deleteResetPasswordToken(token);
     } catch (error) {
       console.error("Failed to delete the reset password token:", error);
-      return { error: "An error occurred while processing the reset password token" };
+      return {
+        error: "An error occurred while processing the reset password token",
+      };
     }
 
     return { success: true };

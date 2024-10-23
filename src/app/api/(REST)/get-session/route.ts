@@ -6,10 +6,7 @@ export async function GET() {
   const session = await getSession();
 
   if (!session?.user?.email) {
-    return new Response(
-      JSON.stringify({ user: null }),
-      { status: 200 }
-    );
+    return new Response(JSON.stringify({ user: null }), { status: 200 });
   }
 
   // Fetch the user along with their plan
@@ -19,6 +16,6 @@ export async function GET() {
     JSON.stringify({
       user: userWithPlan || null,
     }),
-    { status: 200 }
+    { status: 200 },
   );
 }

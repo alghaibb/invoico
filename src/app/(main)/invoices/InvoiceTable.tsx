@@ -47,8 +47,8 @@ const InvoiceStatusBadge = ({ status }: { status: string }) => {
     status === "PAID"
       ? "paid"
       : status === "OVERDUE"
-      ? "destructive"
-      : "outline";
+        ? "destructive"
+        : "outline";
 
   return <Badge variant={variant}>{status}</Badge>;
 };
@@ -243,7 +243,7 @@ export default function InvoiceTable({
                 else e.preventDefault();
               }}
               className={cn(
-                page === totalPages && "cursor-not-allowed text-muted"
+                page === totalPages && "cursor-not-allowed text-muted",
               )}
             />
           </PaginationItem>

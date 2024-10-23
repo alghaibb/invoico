@@ -43,13 +43,16 @@ export const login = actionClient
       });
     } catch (error) {
       return {
-        error: "Your account has been temporarily locked due to too many failed login attempts. Please try again later.",
+        error:
+          "Your account has been temporarily locked due to too many failed login attempts. Please try again later.",
       };
     }
     // Check if user exists and is verified
     if (!user || !user.emailVerified) {
       return {
-        error: user ? "Please verify your email address to log in." : "Invalid email or password",
+        error: user
+          ? "Please verify your email address to log in."
+          : "Invalid email or password",
       };
     }
     // Compare the password
@@ -72,7 +75,8 @@ export const login = actionClient
     // Check if login was unsuccessful
     if (loginResponse?.error) {
       return {
-        error: "Authentication failed. Please check your credentials and try again.",
+        error:
+          "Authentication failed. Please check your credentials and try again.",
       };
     }
 

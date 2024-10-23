@@ -5,7 +5,6 @@ import prisma from "@/lib/prisma";
 
 import { getUserByEmail } from "./user/getUser";
 
-
 // -------------------- OTP GENERATION FUNCTIONS --------------------
 
 // Function to generate 6-digit numeric OTP
@@ -66,7 +65,7 @@ export const verifyVerificationCode = async (otp: string) => {
   });
 
   if (!verificationOTP) {
-    return { user: null, error: "Invalid OTP" }; // OTP 
+    return { user: null, error: "Invalid OTP" }; // OTP
   }
 
   if (verificationOTP.expiresAt <= new Date()) {
@@ -77,7 +76,6 @@ export const verifyVerificationCode = async (otp: string) => {
   // OTP is valid and not expired
   return { user: verificationOTP.user, error: null };
 };
-
 
 // -------------------- RESET PASSWORD FUNCTIONS --------------------
 

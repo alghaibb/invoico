@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/lib/prisma";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
 
     // Check if there are invoices that are overdue
     const overdueInvoicesCheck = await prisma.invoice.findMany({
@@ -20,7 +24,10 @@ export async function GET(req: NextRequest) {
     });
 
     if (overdueInvoicesCheck.length === 0) {
-      return NextResponse.json({ message: "No overdue invoices found." }, { status: 200 });
+      return NextResponse.json(
+        { message: "No overdue invoices found." },
+        { status: 200 },
+      );
     }
 
     // Update overdue invoices
@@ -38,10 +45,13 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { message: `${overdueInvoices.count} invoices marked as overdue.` },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error marking invoices as overdue:", error);
-    return NextResponse.json({ error: "Failed to mark invoices as overdue." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to mark invoices as overdue." },
+      { status: 500 },
+    );
   }
 }

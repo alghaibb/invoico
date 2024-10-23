@@ -3,10 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/utils/session";
 
-
 export const dynamic = "force-dynamic";
 
-export async function DELETE(req: NextRequest, { params }: { params: { invoiceId: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { invoiceId: string } },
+) {
   const invoiceId = params.invoiceId;
 
   try {
@@ -16,7 +18,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
 
     // If there is no logged-in user, block deletion for guests
     if (!userId) {
-      return NextResponse.json({ error: "Guests are not allowed to delete invoices." }, { status: 403 });
+      return NextResponse.json(
+        { error: "Guests are not allowed to delete invoices." },
+        { status: 403 },
+      );
     }
 
     // Check if the invoice exists and belongs to the authenticated user
@@ -31,11 +36,17 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
 
     // Verify the invoice belongs to the authenticated user and is not a guest invoice
     if (invoice.guestId) {
-      return NextResponse.json({ error: "Guest users cannot delete invoices." }, { status: 403 });
+      return NextResponse.json(
+        { error: "Guest users cannot delete invoices." },
+        { status: 403 },
+      );
     }
 
     if (invoice.userId !== userId) {
-      return NextResponse.json({ error: "You do not have permission to delete this invoice." }, { status: 403 });
+      return NextResponse.json(
+        { error: "You do not have permission to delete this invoice." },
+        { status: 403 },
+      );
     }
 
     // Delete the invoice
@@ -48,15 +59,21 @@ export async function DELETE(req: NextRequest, { params }: { params: { invoiceId
       data: {
         invoices: {
           decrement: 1,
-        }
-      }
-    })
+        },
+      },
+    });
 
     console.log("Invoice deleted successfully:", invoiceId);
 
-    return NextResponse.json({ success: "Invoice successfully deleted" }, { status: 200 });
+    return NextResponse.json(
+      { success: "Invoice successfully deleted" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error deleting invoice:", error);
-    return NextResponse.json({ error: "An error occurred while deleting the invoice" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while deleting the invoice" },
+      { status: 500 },
+    );
   }
 }

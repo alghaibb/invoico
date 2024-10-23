@@ -32,7 +32,7 @@ const ConfirmDeleteDialog = forwardRef<
       description = "Are you sure you want to delete this item? This action cannot be undone.",
       triggerElement,
     },
-    ref
+    ref,
   ) => {
     return (
       <AlertDialog>
@@ -59,7 +59,7 @@ const ConfirmDeleteDialog = forwardRef<
         </AlertDialogContent>
       </AlertDialog>
     );
-  }
+  },
 );
 
 ConfirmDeleteDialog.displayName = "ConfirmDeleteDialog";

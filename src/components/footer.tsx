@@ -11,7 +11,7 @@ const Footer = () => {
 
   // Check if any path in pagesWithoutFooter matches the current path
   const shouldHideFooter = pagesWithoutFooter.some((page) =>
-    pathname.startsWith(page)
+    pathname.startsWith(page),
   );
 
   if (shouldHideFooter) {

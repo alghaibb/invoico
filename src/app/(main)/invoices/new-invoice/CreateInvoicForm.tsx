@@ -92,7 +92,7 @@ const CreateInvoiceForm: React.FC = () => {
 
     const totalWithoutTax = items.reduce(
       (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
-      0
+      0,
     );
     const taxAmount = (totalWithoutTax * (taxRate ?? 0)) / 100;
     const totalAmount = totalWithoutTax + taxAmount;
@@ -147,7 +147,7 @@ const CreateInvoiceForm: React.FC = () => {
       } catch (err) {
         console.error("Error creating invoice:", err);
         setError(
-          "An error occurred while creating your invoice. Please try again."
+          "An error occurred while creating your invoice. Please try again.",
         );
       }
     });
@@ -483,13 +483,11 @@ const CreateInvoiceForm: React.FC = () => {
                           type="number"
                           className="pl-6"
                           step="1"
-                          value={
-                            form.watch(`items.${index}.price`)
-                          }
+                          value={form.watch(`items.${index}.price`)}
                           onChange={(e) =>
                             setValue(
                               `items.${index}.price`,
-                              parseFloat(e.target.value)
+                              parseFloat(e.target.value),
                             )
                           }
                           placeholder="Price"
@@ -504,7 +502,7 @@ const CreateInvoiceForm: React.FC = () => {
                         onChange={(e) =>
                           setValue(
                             `items.${index}.quantity`,
-                            parseFloat(e.target.value)
+                            parseFloat(e.target.value),
                           )
                         }
                         placeholder="Quantity"

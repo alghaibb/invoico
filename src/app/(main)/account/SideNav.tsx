@@ -19,7 +19,7 @@ export default function SidebarNav() {
                 <span
                   className={cn(
                     "block p-2 rounded-md transition-all duration-300 ease-in-out transform hover:bg-muted hover:scale-105",
-                    pathname === item.href ? "bg-muted scale-105" : ""
+                    pathname === item.href ? "bg-muted scale-105" : "",
                   )}
                 >
                   {item.name}

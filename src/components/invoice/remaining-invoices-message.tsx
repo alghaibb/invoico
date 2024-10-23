@@ -74,7 +74,11 @@ export const RemainingInvoicesMessage = ({
 
   return (
     <Message
-      type={remainingInvoices !== null && remainingInvoices <= warningThreshold ? "warning" : "info"}
+      type={
+        remainingInvoices !== null && remainingInvoices <= warningThreshold
+          ? "warning"
+          : "info"
+      }
       message={`You have ${remainingInvoices} invoice${
         remainingInvoices === 1 ? "" : "s"
       } left to create according to your plan.`}

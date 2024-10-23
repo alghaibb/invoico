@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 
 import { LoadingDots } from "./loading";
 
-// Add a prop to indicate if the user has invoices
 const Hero = ({ hasInvoice }: { hasInvoice: boolean }) => {
   const [loading, setLoading] = useState(false);
   const [buttonWidth, setButtonWidth] = useState<number | null>(null);

@@ -28,7 +28,7 @@ const CardWrapper = ({
       className={cn(
         "w-full shadow-md xl:w-1/4 md:w-1/2",
         "px-4 py-4 md:px-0 md:py-0",
-        className
+        className,
       )}
     >
       <CardHeader className="pt-6 text-center sm:pt-8 md:pt-10 lg:pt-12">

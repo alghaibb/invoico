@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { NextResponse, NextRequest } from "next/server";
 
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
 
-    // Calcuate the offset for prisma 
+    // Calcuate the offset for prisma
     const skip = (page - 1) * pageSize;
 
     // Get session and user ID
@@ -40,10 +40,7 @@ export async function GET(request: NextRequest) {
       });
 
       if (!user) {
-        return NextResponse.json(
-          { error: "User not found." },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "User not found." }, { status: 404 });
       }
 
       // Count total invoices for pagination calculation
@@ -52,7 +49,8 @@ export async function GET(request: NextRequest) {
       });
 
       // Check remaining invoices for the user
-      const { success, remainingInvoices, error } = await limitUserInvoices(userId);
+      const { success, remainingInvoices, error } =
+        await limitUserInvoices(userId);
 
       // If the user has reached their invoice limit
       if (!success) {
@@ -63,7 +61,7 @@ export async function GET(request: NextRequest) {
             totalInvoices,
             message: error,
           },
-          { status: 200 }
+          { status: 200 },
         );
       }
 
@@ -74,7 +72,7 @@ export async function GET(request: NextRequest) {
           totalInvoices,
           plan: user.Plan,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } else {
       // Handle guest logic
@@ -82,7 +80,7 @@ export async function GET(request: NextRequest) {
       if (!guestIp) {
         return NextResponse.json(
           { error: "Unable to retrieve guest IP" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -103,7 +101,6 @@ export async function GET(request: NextRequest) {
         where: { guestId: guestUsage?.id },
       });
 
-
       // Check remaining invoices for the guest
       const { success, remainingInvoices, error } = await limitGuestInvoices();
 
@@ -116,20 +113,24 @@ export async function GET(request: NextRequest) {
             totalInvoices: totalGuestInvoices,
             message: error,
           },
-          { status: 200 }
+          { status: 200 },
         );
       }
 
       return NextResponse.json(
-        { invoices: guestUsage?.Invoice || [], remainingInvoices, totalInvoices: totalGuestInvoices },
-        { status: 200 }
+        {
+          invoices: guestUsage?.Invoice || [],
+          remainingInvoices,
+          totalInvoices: totalGuestInvoices,
+        },
+        { status: 200 },
       );
     }
   } catch (error) {
     console.error("Error fetching invoices:", error);
     return NextResponse.json(
       { error: "An error occurred while fetching invoices." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

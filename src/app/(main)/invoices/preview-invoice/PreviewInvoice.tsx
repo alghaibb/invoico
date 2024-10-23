@@ -17,7 +17,7 @@ import {
 import { InvoiceCreateSchema } from "@/validations/invoice";
 
 // Define the type for invoiceData using the Zod schema or Prisma model
-type InvoiceData = z.infer<typeof InvoiceCreateSchema>
+type InvoiceData = z.infer<typeof InvoiceCreateSchema>;
 
 interface PreviewInvoiceProps {
   invoice: InvoiceData;

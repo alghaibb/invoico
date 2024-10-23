@@ -22,9 +22,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { ContactFormSchema } from "@/validations";
 
-
-
-
 // Define types based on Zod schema
 type ContactFormData = z.infer<typeof ContactFormSchema>;
 

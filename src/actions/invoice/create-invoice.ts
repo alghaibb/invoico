@@ -1,17 +1,23 @@
-"use server"
+"use server";
 
 import { flattenValidationErrors } from "next-safe-action";
 
 import { getIp } from "@/lib/get-ip";
 import prisma from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
-import { generateInvoiceNumberForGuest, generateInvoiceNumberForUser, limitGuestInvoices, limitUserInvoices } from "@/utils/invoice";
+import {
+  generateInvoiceNumberForGuest,
+  generateInvoiceNumberForUser,
+  limitGuestInvoices,
+  limitUserInvoices,
+} from "@/utils/invoice";
 import { getSession } from "@/utils/session";
 import { InvoiceCreateSchema } from "@/validations/invoice";
 
 export const createInvoice = actionClient
   .schema(InvoiceCreateSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput }) => {
     const {
@@ -49,7 +55,8 @@ export const createInvoice = actionClient
         await limitUserInvoices(userId);
 
         // Generate an invoice number if not provided
-        generatedInvoiceNo = invoiceNo || await generateInvoiceNumberForUser(userId);
+        generatedInvoiceNo =
+          invoiceNo || (await generateInvoiceNumberForUser(userId));
 
         // Create the invoice for a registered user
         const invoice = await prisma.invoice.create({
@@ -74,7 +81,7 @@ export const createInvoice = actionClient
             taxRate: taxRate,
             taxAmount: taxAmount || null,
             InvoiceItem: {
-              create: items.map(item => ({
+              create: items.map((item) => ({
                 description: item.description,
                 quantity: item.quantity,
                 price: item.price,
@@ -93,7 +100,7 @@ export const createInvoice = actionClient
             userId,
             month: new Date(),
             invoices: 1,
-          }
+          },
         });
 
         return { success: "Invoice successfully created", invoice };
@@ -104,7 +111,8 @@ export const createInvoice = actionClient
         } catch (error) {
           console.error("Guest invoice limit reached", error);
           return {
-            error: "You have reached the maximum number of invoices allowed. Please create an account to create more invoices.",
+            error:
+              "You have reached the maximum number of invoices allowed. Please create an account to create more invoices.",
           };
         }
 
@@ -115,7 +123,8 @@ export const createInvoice = actionClient
         }
 
         // Generate an invoice number if not provided
-        generatedInvoiceNo = invoiceNo || `GUEST-${await generateInvoiceNumberForGuest(guestIp)}`;
+        generatedInvoiceNo =
+          invoiceNo || `GUEST-${await generateInvoiceNumberForGuest(guestIp)}`;
 
         // Ensure the GuestUsage record exists for the guest IP
         let guestUsage = await prisma.guestUsage.findUnique({
@@ -155,7 +164,7 @@ export const createInvoice = actionClient
             taxRate: taxRate,
             taxAmount: taxAmount || null,
             InvoiceItem: {
-              create: items.map(item => ({
+              create: items.map((item) => ({
                 description: item.description,
                 quantity: item.quantity,
                 price: item.price,
@@ -177,6 +186,9 @@ export const createInvoice = actionClient
       }
     } catch (error) {
       console.error("Error in createInvoice action: ", error);
-      return { error: "An error occurred while creating your invoice. Please try again." };
+      return {
+        error:
+          "An error occurred while creating your invoice. Please try again.",
+      };
     }
   });

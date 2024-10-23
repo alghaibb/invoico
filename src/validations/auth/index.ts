@@ -9,9 +9,13 @@ const emailValidation = z.string().email({ message: "Invalid email address" });
 const passwordValidation = z
   .string()
   .min(8, { message: "Password must be at least 8 characters long" })
-  .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
+  .regex(/[A-Z]/, {
+    message: "Password must contain at least one uppercase letter",
+  })
   .regex(/[0-9]/, { message: "Password must contain at least one number" })
-  .regex(/[@$!%*?&#]/, { message: "Password must contain at least one special character" });
+  .regex(/[@$!%*?&#]/, {
+    message: "Password must contain at least one special character",
+  });
 
 // Confirm password validation (reused in schemas where necessary)
 const confirmPasswordValidation = z

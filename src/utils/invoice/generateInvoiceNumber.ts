@@ -26,7 +26,7 @@ export async function generateInvoiceNumberForGuest(guestIp: string) {
 
   // If no guest usage exists, this is their first invoice
   if (!guestUsage) {
-    return 'inv0001';
+    return "inv0001";
   }
 
   // Increment the invoice count for the guest
