@@ -41,9 +41,17 @@ export async function getUserFromSession() {
   const { user } = session;
 
   return {
-    name: user.firstName + " " + user.lastName,
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
-    planType: user.Plan?.type,
-    planId: user.Plan?.id,
+    role: user.role,
+    password: user.password,
+    emailVerified: user.emailVerified,
+    image: user.image,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    planId: user.planId,
+    Plan: user.Plan, // Include Plan details if needed
   };
 }

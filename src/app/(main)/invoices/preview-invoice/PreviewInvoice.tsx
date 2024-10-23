@@ -24,9 +24,6 @@ interface PreviewInvoiceProps {
 }
 
 const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
-  // Log invoice object to verify the id is passed correctly
-  console.log("Invoice data passed to PreviewInvoice:", invoice);
-
   return (
     <div className="container p-6 mx-auto">
       <div id="invoice-preview" className="space-y-6">
@@ -119,7 +116,7 @@ const PreviewInvoice: React.FC<PreviewInvoiceProps> = ({ invoice }) => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between mt-6 text-center md:text-right md:flex-row">
+        <div className="flex flex-col justify-between mt-6 space-y-4 text-center md:text-right md:flex-row md:space-y-0">
           <Button asChild id="view-invoices">
             <Link href="/invoices">View All Invoices</Link>
           </Button>
