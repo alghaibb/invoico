@@ -1,42 +1,21 @@
+// src/components/UpdateInfo.tsx
+
 "use client";
 
 import { Plan, User } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { LoadingDots } from "@/components/loading";
 import PasswordUpdateForm from "@/components/password-update-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function UpdateInfo() {
-  const [user, setUser] = useState<(User & { Plan: Plan | null }) | null>(null);
-  const [loading, setLoading] = useState(true);
+type UpdateInfoProps = {
+  user: User & { Plan: Plan | null };
+};
+
+export default function UpdateInfo({ user }: UpdateInfoProps) {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("/api/user/get-user");
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  if (loading) {
-    return <LoadingDots />;
-  }
-
-  if (!user) {
-    return <div>User not found</div>;
-  }
 
   const togglePasswordFormVisibility = () =>
     setShowPasswordForm(!showPasswordForm);
@@ -48,8 +27,8 @@ export default function UpdateInfo() {
         <Label htmlFor="firstName">First Name</Label>
         <Input
           id="firstName"
-          placeholder={user.firstName || "First Name"}
-          defaultValue={user.firstName || ""}
+          placeholder="First Name"
+          defaultValue={user.firstName ?? ""} 
         />
       </div>
 
@@ -58,8 +37,8 @@ export default function UpdateInfo() {
         <Label htmlFor="lastName">Last Name</Label>
         <Input
           id="lastName"
-          placeholder={user.lastName || "Last Name"}
-          defaultValue={user.lastName || ""}
+          placeholder="Last Name"
+          defaultValue={user.lastName ?? ""} 
         />
       </div>
 
@@ -69,7 +48,7 @@ export default function UpdateInfo() {
         <Input
           id="email"
           type="email"
-          placeholder={user.email || "Your email address"}
+          placeholder="Your email address"
           defaultValue={user.email}
           readOnly
           disabled

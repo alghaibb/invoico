@@ -3,6 +3,9 @@ import {
   AiOutlineFileText,
   AiOutlineSend,
 } from "react-icons/ai";
+import { HiOutlineCalculator } from "react-icons/hi";
+import { MdOutlineMail, MdOutlinePayments } from "react-icons/md";
+import { TbFileInvoice } from "react-icons/tb";
 
 // Navbar links
 export const navbarLinks = [
@@ -71,5 +74,36 @@ export const howItWorksSteps = [
     description:
       "Send invoices directly via email, track payment statuses, and manage your invoices easily from your dashboard. Upgrade your plan for more invoices and premium features.",
     icon: AiOutlineSend,
+  },
+];
+
+export const features = [
+  {
+    title: "Easy Invoice Creation",
+    shortDescription: "Create professional invoices quickly.",
+    detailedDescription:
+      "Quickly create professional invoices. Add your business details, line items, and tax information to generate an invoice effortlessly.",
+    icon: TbFileInvoice,
+  },
+  {
+    title: "Automatic Calculations",
+    shortDescription: "Accurate tax and total calculations.",
+    detailedDescription:
+      "Automatically calculate taxes, discounts, and totals for your invoices, ensuring accuracy and eliminating manual calculations.",
+    icon: HiOutlineCalculator,
+  },
+  {
+    title: "Email Invoicing",
+    shortDescription: "Send invoices directly via email.",
+    detailedDescription:
+      "Send invoices directly to your clients via email with a single click. Keep track of sent invoices and follow up easily.",
+    icon: MdOutlineMail,
+  },
+  {
+    title: "Payment Tracking",
+    shortDescription: "Track payment statuses effortlessly.",
+    detailedDescription:
+      "Monitor payment statuses and overdue invoices. Get notified about pending payments and keep your cash flow on track.",
+    icon: MdOutlinePayments,
   },
 ];

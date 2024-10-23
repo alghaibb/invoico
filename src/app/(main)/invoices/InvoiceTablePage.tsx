@@ -6,7 +6,6 @@ import InvoiceTable from "./InvoiceTable";
 export default async function InvoiceTablePage() {
   const session = await getSession(); // Fetch session data
   const userId = session?.user?.id || null;
-  const isGuestInitial = !userId;
   const pageSize = 10;
   const currentPage = 1;
 

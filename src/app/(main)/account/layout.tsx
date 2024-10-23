@@ -21,7 +21,7 @@ export default function AccountLayout({
       <Separator orientation="horizontal" className="block my-2 md:hidden" />
 
       {/* Main content */}
-      <div className="flex-1 p-4 md:p-6">{children}</div>
+      <div className="flex-1 mt-4 md:p-6 md:mt-0">{children}</div>
     </div>
   );
 }
