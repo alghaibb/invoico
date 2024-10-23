@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { getSession } from "next-auth/react";
 import React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -50,7 +51,34 @@ const iconVariants = {
   },
 };
 
-const HowItWorks = () => {
+interface HowItWorksProps {
+  isLoggedIn: boolean;
+  hasInvoices: boolean;
+}
+
+const HowItWorks: React.FC<HowItWorksProps> = ({ isLoggedIn, hasInvoices }) => {
+  // Update howItWorksSteps based on the user's status
+  const steps = [...howItWorksSteps];
+  if (isLoggedIn && hasInvoices) {
+    steps[0] = {
+      title: "1. View Your Existing Invoices",
+      description:
+        "Check your current invoices or create new ones to keep track of your billing.",
+      link: "/invoices",
+      buttonText: "View Invoices",
+      icon: howItWorksSteps[0].icon,
+    };
+  } else if (isLoggedIn) {
+    steps[0] = {
+      title: "1. Create a New Invoice",
+      description:
+        "Get started by creating your first invoice and keep your billing organized.",
+      link: "/invoices/new-invoice",
+      buttonText: "Create Invoice",
+      icon: howItWorksSteps[0].icon,
+    };
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted">
       <motion.div
@@ -71,7 +99,7 @@ const HowItWorks = () => {
           className="grid grid-cols-1 gap-12 md:grid-cols-3"
           variants={containerVariants}
         >
-          {howItWorksSteps.map((step, index) => (
+          {steps.map((step, index) => (
             <motion.div
               key={index}
               className="p-8 transition-all duration-300 rounded-lg shadow-lg bg-background hover:shadow-xl"

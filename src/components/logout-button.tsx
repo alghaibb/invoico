@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { logout } from "@/actions/auth/logout";
 
 interface LogoutButtonProps {
@@ -8,8 +10,11 @@ interface LogoutButtonProps {
 }
 
 export const LogoutButton = ({ children, className }: LogoutButtonProps) => {
-  const onClick = () => {
-    logout();
+  const router = useRouter();
+
+  const onClick = async () => {
+    await logout();
+    router.push("/login");
     window.location.href = "/login";
   };
 
