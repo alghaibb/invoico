@@ -13,11 +13,11 @@ const Navbar = async () => {
   const session = await getSession();
 
   return (
-    <nav className="fixed top-0 right-0 z-50 flex items-center justify-between w-full px-6 py-4 md:px-8 md:py-6 bg-gradient-to-r from-purple-500 to bg-primary border-b border-secondary">
+    <nav className="fixed top-0 right-0 z-50 flex items-center justify-between w-full px-6 py-4 bg-white border-b md:px-8 md:py-6">
       {/* Logo */}
       <Link href="/">
         <Image
-          src="/logo-no-background-white.svg"
+          src="/logo-no-background.svg"
           alt="Invoice logo"
           width={100}
           height={100}
@@ -29,9 +29,7 @@ const Navbar = async () => {
       <div className="hidden space-x-4 md:flex">
         {navbarLinks.map((link) => (
           <Link key={link.href} href={link.href}>
-            <Button variant="link" className="text-secondary">
-              {link.label}
-            </Button>
+            <Button variant="link">{link.label}</Button>
           </Link>
         ))}
       </div>

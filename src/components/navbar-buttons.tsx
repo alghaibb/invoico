@@ -24,14 +24,14 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({
       {isAuthenticated ? (
         <>
           <Link href="/account">
-            <Button variant="navbar">Account</Button>
+            <Button>Account</Button>
           </Link>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <span>
                   <LogoutButton>
-                    <LogOutIcon />
+                    <LogOutIcon className="text-primary" />
                   </LogoutButton>
                 </span>
               </TooltipTrigger>

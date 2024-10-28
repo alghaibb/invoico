@@ -38,14 +38,14 @@ const MobileNav = () => {
   }, [isOpen]);
 
   return (
-    <>
+    <div>
       <button onClick={toggleMenu} aria-label="Open Menu">
-        <RxHamburgerMenu className="w-7 h-7 text-secondary" />
+        <RxHamburgerMenu className="w-7 h-7 text-primary" />
       </button>
 
       <div className={`${styles["mobile-menu"]} ${isOpen ? styles.open : ""}`}>
         <button onClick={toggleMenu} className="absolute z-50 top-8 right-5">
-          <X className="w-7 h-7" />
+          <X className="w-7 h-7 text-primary" />
         </button>
 
         <div className={styles["menu-links"]}>
@@ -82,7 +82,7 @@ const MobileNav = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
