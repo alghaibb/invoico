@@ -1,8 +1,8 @@
 "use client";
 
-import { Invoice } from "@prisma/client";
+import { Invoice, InvoiceStatus } from "@prisma/client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
 import { Message } from "@/components/custom-message";
@@ -42,7 +42,7 @@ type InvoiceTableProps = {
 };
 
 // Badge component for displaying invoice status
-const InvoiceStatusBadge = ({ status }: { status: string }) => {
+const InvoiceStatusBadge = ({ status }: { status: InvoiceStatus }) => {
   const variant =
     status === "PAID"
       ? "paid"
@@ -59,6 +59,7 @@ export default function InvoiceTable({
   currentPage,
   initialTotalInvoices,
 }: InvoiceTableProps) {
+  const [invoiceStatus, setInvoiceStatus] = useState(initialInvoices);
   const {
     invoices,
     remainingInvoices,
@@ -112,6 +113,14 @@ export default function InvoiceTable({
       const fieldB = sortBy === "date" ? new Date(b.dueDate) : b.totalAmount;
       return (sortOrder === "asc" ? 1 : -1) * (fieldA > fieldB ? 1 : -1);
     });
+
+  const handleStatusChange = (newStatus: InvoiceStatus, invoiceId: string) => {
+    setInvoiceStatus((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.id === invoiceId ? { ...invoice, status: newStatus } : invoice
+      )
+    );
+  };
 
   if (loading) {
     return <LoadingDots />;
@@ -198,6 +207,7 @@ export default function InvoiceTable({
                     <InvoiceActionsDropdown
                       invoiceId={invoice.id}
                       initialStatus={invoice.status}
+                      onStatusChange={handleStatusChange}
                     />
                   </TableCell>
                 </TableRow>
@@ -243,7 +253,7 @@ export default function InvoiceTable({
                 else e.preventDefault();
               }}
               className={cn(
-                page === totalPages && "cursor-not-allowed text-muted",
+                page === totalPages && "cursor-not-allowed text-muted"
               )}
             />
           </PaginationItem>

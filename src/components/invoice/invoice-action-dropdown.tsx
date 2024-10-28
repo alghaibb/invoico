@@ -19,9 +19,11 @@ import ConfirmDeleteDialog from "../confirm-delete-dialog";
 const InvoiceActionsDropdown = ({
   invoiceId,
   initialStatus,
+  onStatusChange,
 }: {
   invoiceId: string;
   initialStatus: InvoiceStatus;
+  onStatusChange: (newStatus: InvoiceStatus, invoiceId: string) => void;
 }) => {
   const [currentStatus, setCurrentStatus] =
     useState<InvoiceStatus>(initialStatus);
@@ -80,46 +82,33 @@ const InvoiceActionsDropdown = ({
 
   const handleUpdateStatus = async (newStatus: InvoiceStatus) => {
     setLoading(true);
+    setCurrentStatus(newStatus); // Optimistically update the local state
+    onStatusChange(newStatus, invoiceId); // Update the parent component
 
     try {
       const res = await fetch(
         `/api/invoice/update-invoice-status/${invoiceId}`,
         {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: newStatus }),
-        },
+        }
       );
-
       const result = await res.json();
 
-      if (res.ok) {
-        toast({
-          title: "Status Updated",
-          description: result.success,
-        });
-        setCurrentStatus(newStatus);
-
-        setTimeout(() => {
-          {
-            window.location.href = "/invoices";
-          }
-        }, 2000);
-      } else {
-        toast({
-          title: "Error",
-          description: result.error,
-          variant: "destructive",
-        });
+      if (!res.ok) {
+        throw new Error(result.error);
       }
+      toast({ title: "Status Updated", description: result.success });
     } catch (error) {
       toast({
         title: "Error",
         description: "An error occurred while updating the invoice status.",
         variant: "destructive",
       });
+      // Revert optimistic update on error
+      setCurrentStatus(initialStatus);
+      onStatusChange(initialStatus, invoiceId);
     } finally {
       setLoading(false);
     }

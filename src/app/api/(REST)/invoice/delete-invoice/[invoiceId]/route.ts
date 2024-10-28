@@ -61,9 +61,8 @@ export async function DELETE(
           decrement: 1,
         },
       },
+      select: { invoices: true },
     });
-
-    console.log("Invoice deleted successfully:", invoiceId);
 
     return NextResponse.json(
       { success: "Invoice successfully deleted" },
