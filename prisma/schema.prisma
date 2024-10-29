@@ -35,6 +35,7 @@ model User {
   password      String?
   emailVerified DateTime?
   image         String?
+  planType      PlanType  @default(FREE)
 
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
@@ -47,6 +48,7 @@ model User {
   Plan               Plan?                @relation(fields: [planId], references: [id])
   planId             String?
   Invoice            Invoice[]
+  Subscription       Subscription[]
 
   @@map("users")
 }
@@ -214,4 +216,20 @@ model InvoiceItem {
   updatedAt DateTime @updatedAt
 
   @@map("invoice_items")
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String
+  stripeSubscriptionId String    @unique
+  subscriptionStatus   String
+  planType             PlanType
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
 }
