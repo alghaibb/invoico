@@ -33,10 +33,7 @@ const useInvoiceData = () => {
       try {
         setInvoiceData((prevState) => ({ ...prevState, loading: true }));
 
-        // Fetch invoices from the API only if we don’t have them already
-        const res = await fetch(
-          `/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`,
-        );
+        const res = await fetch(`/api/invoice/get-invoices?page=${page}&pageSize=${pageSize}`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -44,24 +41,23 @@ const useInvoiceData = () => {
         }
 
         setInvoiceData((prevState) => ({
-          invoices: data.invoices || [], // Ensure empty array if no invoices
-          remainingInvoices: data.remainingInvoices || 0,
-          totalInvoices: data.totalInvoices || 0,
+          invoices: data.invoices || [],
+          remainingInvoices: data.remainingInvoices,
+          totalInvoices: data.totalInvoices || prevState.totalInvoices,
           planType: data.plan?.type || null,
-          isGuest: !session?.user, // If no session, treat as guest
+          isGuest: !session?.user,
           errorMessage: null,
-          loading: false, // Set loading to false after data is fetched
+          loading: false,
         }));
       } catch (error) {
         setInvoiceData((prevState) => ({
           ...prevState,
           loading: false,
-          errorMessage:
-            error instanceof Error ? error.message : "Failed to fetch invoices",
+          errorMessage: error instanceof Error ? error.message : "Failed to fetch invoices",
         }));
       }
     },
-    [session],
+    [session]
   );
 
   // Fetch invoices when the page or session changes, and only fetch once unless data is invalidated

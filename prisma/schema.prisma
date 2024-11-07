@@ -5,8 +5,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("POSTGRES_PRISMA_URL")
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRESS_POOLED_URL")
 }
 
 enum Role {
@@ -48,7 +48,7 @@ model User {
   Plan               Plan?                @relation(fields: [planId], references: [id])
   planId             String?
   Invoice            Invoice[]
-  Subscription       Subscription[]
+  subscription       Subscription[]
 
   @@map("users")
 }

@@ -4,10 +4,6 @@ import prisma from "@/lib/prisma";
 export const getUserByEmail = async (email: string, password?: string) => {
   return await prisma.user.findUnique({
     where: { email },
-    cacheStrategy: {
-      ttl: 60, // Cache user for 60 seconds
-      swr: 120, // Revalidate user after 120 seconds
-    },
   });
 };
 
@@ -15,10 +11,6 @@ export const getUserByEmail = async (email: string, password?: string) => {
 export const getUserById = async (id: string) => {
   return await prisma.user.findUnique({
     where: { id },
-    cacheStrategy: {
-      ttl: 30, // Cache user for 30 seconds
-      swr: 60, // Serve stale data for 60 seconds
-    },
   });
 };
 
@@ -34,10 +26,6 @@ export const getUserByIdWithPlan = async (id: string) => {
   return await prisma.user.findUnique({
     where: { id },
     include: { Plan: true },
-    cacheStrategy: {
-      ttl: 30, // Cache user for 30 seconds
-      swr: 120, // Serve stale data for 120 seconds
-    },
   });
 };
 

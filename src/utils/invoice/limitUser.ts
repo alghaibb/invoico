@@ -9,29 +9,33 @@ export async function limitUserInvoices(userId: string) {
 
   // Get the user and their plan
   const user = await getUserByIdWithPlan(userId);
-
   if (!user) {
     return { success: false, error: "User not found", remainingInvoices: 0 };
   }
 
-  // Check the invoice limit based on the user's plan, default to 10 invoices if plan is missing
+  // Default to the plan's invoice limit (e.g., 10)
   const invoiceLimit = user.Plan?.invoiceLimit || 10;
 
   // Find the user's monthly usage record for the current month
   let userUsage = await prisma.userMonthlyUsage.findUnique({
     where: { userId },
-    cacheStrategy: {
-      ttl: 60, // Cache user usage for 60 seconds
-      swr: 120, // Serve stale data for 120 seconds
-    },
   });
 
-  // If no record exists or the record is for a previous month, return the full limit for the current month
+  // Check if usage record is from the current month
   if (!userUsage || userUsage.month < currentMonthStart) {
-    return { success: true, remainingInvoices: invoiceLimit };
+    // Reset invoices if it's a new month or create a new record
+    userUsage = await prisma.userMonthlyUsage.upsert({
+      where: { userId },
+      update: { month: currentMonthStart, invoices: 0 },
+      create: {
+        userId,
+        month: currentMonthStart,
+        invoices: 0,
+      },
+    });
   }
 
-  // Calculate remaining invoices
+  // Calculate remaining invoices based on the current month's usage
   const remainingInvoices = invoiceLimit - userUsage.invoices;
 
   // If no remaining invoices, return with an error message
