@@ -1,5 +1,3 @@
-// src/components/UpdateInfo.tsx
-
 "use client";
 
 import { Plan, User } from "@prisma/client";

@@ -1,3 +1,4 @@
+import { PlanType } from "@prisma/client";
 import { cookies } from "next/headers";
 
 import prisma from "@/lib/prisma";
@@ -22,10 +23,6 @@ export async function getSession() {
           Plan: true,
         },
       },
-    },
-    cacheStrategy: {
-      ttl: 60, // Cache session for 60 seconds
-      swr: 120, // Serve stale data for 120 seconds
     },
   });
 
@@ -52,6 +49,7 @@ export async function getUserFromSession() {
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
     planId: user.planId,
-    Plan: user.Plan, // Include Plan details if needed
+    planType: user.Plan?.type || "FREE",
+    Plan: user.Plan,
   };
 }
