@@ -92,7 +92,7 @@ const CreateInvoiceForm: React.FC = () => {
 
     const totalWithoutTax = items.reduce(
       (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
-      0,
+      0
     );
     const taxAmount = (totalWithoutTax * (taxRate ?? 0)) / 100;
     const totalAmount = totalWithoutTax + taxAmount;
@@ -147,7 +147,7 @@ const CreateInvoiceForm: React.FC = () => {
       } catch (err) {
         console.error("Error creating invoice:", err);
         setError(
-          "An error occurred while creating your invoice. Please try again.",
+          "An error occurred while creating your invoice. Please try again."
         );
       }
     });
@@ -483,13 +483,24 @@ const CreateInvoiceForm: React.FC = () => {
                           type="number"
                           className="pl-6"
                           step="1"
-                          value={form.watch(`items.${index}.price`)}
-                          onChange={(e) =>
+                          value={form.watch(`items.${index}.price`) || ""}
+                          onChange={(e) => {
+                            let priceValue = e.target.value;
+
+                            // Remove leading zeros if present, unless the entire input is "0"
+                            if (
+                              priceValue.startsWith("0") &&
+                              priceValue.length > 1
+                            ) {
+                              priceValue = priceValue.replace(/^0+/, ""); // Remove leading zeros
+                            }
+
+                            // If priceValue is empty, set it to empty string; otherwise, parse as float
                             setValue(
                               `items.${index}.price`,
-                              parseFloat(e.target.value),
-                            )
-                          }
+                              priceValue === "" ? 0 : parseFloat(priceValue)
+                            );
+                          }}
                           placeholder="Price"
                         />
                       </div>
@@ -502,7 +513,7 @@ const CreateInvoiceForm: React.FC = () => {
                         onChange={(e) =>
                           setValue(
                             `items.${index}.quantity`,
-                            parseFloat(e.target.value),
+                            parseFloat(e.target.value)
                           )
                         }
                         placeholder="Quantity"

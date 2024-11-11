@@ -72,7 +72,6 @@ export default function InvoiceTable({
   } = useInvoiceData();
 
   const { status, sortBy, sortOrder } = useFilter();
-
   // Set initial data from server
   useEffect(() => {
     setInvoiceData({
