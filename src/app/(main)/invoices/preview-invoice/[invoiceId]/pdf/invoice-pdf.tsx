@@ -117,6 +117,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoice }) => (
       {/* Header Section */}
       <View style={styles.header}>
         <View>
+          <Text style={styles.heading}>{invoice.invoiceNo}</Text>
           <Text style={styles.heading}>{invoice.invoiceTitle}</Text>
           <Text style={styles.subheading}>
             Issue Date: {new Date(invoice.issueDate).toLocaleDateString()}
